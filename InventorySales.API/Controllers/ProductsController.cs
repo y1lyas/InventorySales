@@ -5,7 +5,6 @@ using InventorySales.Application.Features.Products.Commands.UpdatePrice;
 using InventorySales.Application.Features.Products.DTOs;
 using InventorySales.Application.Features.Products.Queries.GetLowStock;
 using InventorySales.Application.Features.Products.Queries.GetProducts;
-using InventorySales.Domain.Entities.Auth;
 
 namespace InventorySales.API.Controllers
 {
@@ -14,12 +13,10 @@ namespace InventorySales.API.Controllers
     public class ProductsController : ControllerBase
     {
         private readonly IMediator _mediator;
-        private readonly IMapper _mapper;
 
-        public ProductsController(IMediator mediator, IMapper mapper)
+        public ProductsController(IMediator mediator)
         {
             _mediator = mediator;
-            _mapper = mapper;
         }
 
         [HttpGet]
@@ -32,51 +29,32 @@ namespace InventorySales.API.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateProduct([FromBody] CreateProductDto dto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var command = _mapper.Map<CreateProductCommand>(dto);
-            var productId = await _mediator.Send(command);
+            var productId = await _mediator.Send(new CreateProductCommand(dto.Name, dto.UnitPrice));
             return Created(string.Empty, productId);
         }
         [HttpPut("price")]
         public async Task<IActionResult> UpdatePrice([FromBody] UpdatePriceDto dto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var command = _mapper.Map<UpdateProductPriceCommand>(dto);
-            await _mediator.Send(command);
+            await _mediator.Send(new UpdateProductPriceCommand(dto.ProductId, dto.NewPrice));
             return NoContent();
         }
 
         [HttpPost("increase-stock")]
         public async Task<IActionResult> IncreaseStock([FromBody] IncreaseStockDto dto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var command = _mapper.Map<IncreaseStockCommand>(dto);
-            await _mediator.Send(command);
+            await _mediator.Send(new IncreaseStockCommand(dto.ProductId,dto.Quantity));
             return Ok();
         }
 
         [HttpPost("decrease-stock")]
         public async Task<IActionResult> DecreaseStock([FromBody] DecreaseStockDto dto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var command = _mapper.Map<DecreaseStockCommand>(dto);
-            await _mediator.Send(command);
+                await _mediator.Send(new DecreaseStockCommand(dto.ProductId, dto.Quantity));
             return Ok();
         }
         [HttpGet("low-stock")]
         public async Task<IActionResult> GetLowStock([FromQuery] int threshold = 5)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
             var query = new GetLowStockProductsQuery(threshold);
             var result = await _mediator.Send(query);
             return Ok(result);

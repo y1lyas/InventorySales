@@ -9,26 +9,22 @@ namespace InventorySales.API.Controllers
     public class SalesController : Controller
     {
         private readonly IMediator _mediator;
-        private readonly IMapper _mapper;
 
-        public SalesController(IMediator mediator, IMapper mapper)
+        public SalesController(IMediator mediator)
         {
             _mediator = mediator;
-            _mapper = mapper;
         }
 
         [HttpPost("make-sale")]
         public async Task<IActionResult> MakeSale([FromBody] MakeSaleDto dto)
         {
-            var command = _mapper.Map<MakeSaleCommand>(dto);
-            var saleId = await _mediator.Send(command);
+            var saleId = await _mediator.Send(new MakeSaleCommand(dto.ProductId, dto.Quantity));
             return Ok(new { saleId });
         }
         [HttpGet("sales")]
         public async Task<IActionResult> GetUserSales()
         {
-            var query = new GetSalesQuery();
-            var result = await _mediator.Send(query);
+            var result = await _mediator.Send(new GetSalesQuery());
             return Ok(result);
         }
     }

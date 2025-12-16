@@ -11,33 +11,23 @@ namespace InventorySales.API.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IMediator _mediator;
-        private readonly IMapper _mapper;
 
-        public AuthController(IMediator mediator, IMapper mapper)
+        public AuthController(IMediator mediator)
         {
             _mediator = mediator;
-            _mapper = mapper;
         }
 
         [HttpPost("Register")]
         public async Task<IActionResult> Register([FromBody] RegisterUserDto dto, CancellationToken ct)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var command = _mapper.Map<RegisterUserCommand>(dto);
-            var tokens = await _mediator.Send(command);
+            var tokens = await _mediator.Send(new RegisterUserCommand(dto.Password, dto.Email));
             return Ok(tokens);
         }
 
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] LoginUserDto dto, CancellationToken ct)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var command = _mapper.Map<LoginUserCommand>(dto);
-            var tokens = await _mediator.Send(command);
+            var tokens = await _mediator.Send(new LoginUserCommand(dto.Password, dto.Email));
             return Ok(tokens);
         }
 
