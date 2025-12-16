@@ -1,7 +1,5 @@
 ﻿using InventorySales.Application.Interfaces;
 using InventorySales.Infrastructure.Persistence;
-using InventorySales.Infrastructure.Specifications;
-using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
 namespace InventorySales.Infrastructure.Repositories
@@ -32,18 +30,6 @@ namespace InventorySales.Infrastructure.Repositories
 
         public async Task DeleteAsync(T entity) =>
             Table.Remove(entity);
-
-        public async Task<T?> GetBySpecAsync(ISpecification<T> spec)
-        {
-            var query = SpecificationEvaluator.GetQuery(_context.Set<T>(), spec);
-            return await query.FirstOrDefaultAsync();
-        }
-
-        public async Task<List<T>> ListAsync(ISpecification<T> spec)
-        {
-            var query = SpecificationEvaluator.GetQuery(_context.Set<T>(), spec);
-            return await query.ToListAsync();
-        }
 
     }
 }

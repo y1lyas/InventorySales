@@ -1,7 +1,7 @@
 ﻿using InventorySales.Application.Exceptions;
 using InventorySales.Application.Interfaces;
-using InventorySales.Application.Specifications;
 using InventorySales.Domain.Entities.Auth;
+using Microsoft.EntityFrameworkCore;
 
 namespace InventorySales.Application.Features.Users.Commands.RevokeRefresh
 {
@@ -18,14 +18,11 @@ namespace InventorySales.Application.Features.Users.Commands.RevokeRefresh
         {
             var userId = _userInfo.UserId;
 
-            var spec = new UserWithRefreshTokenSpecification(userId);
-
-            var user = await _uow.Repository<User>().GetBySpecAsync(spec)
+            var user = await _uow.Repository<User>().Query().Where(u => u.Id == userId)
+                .Include(u => u.RefreshTokens)
+                .FirstOrDefaultAsync(cancellationToken)
                      ?? throw new RefreshTokenInvalidException();
-            if (user == null)
-            {
-                throw new RefreshTokenInvalidException();
-            }
+
             var rt = user.RefreshTokens.Where(r => r.RevokedAt == null).FirstOrDefault();
 
             if (rt == null || !rt.IsActive)

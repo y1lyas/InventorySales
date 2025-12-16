@@ -1,8 +1,7 @@
 ﻿using InventorySales.Application.Features.Sales.DTOs;
 using InventorySales.Application.Interfaces;
-using InventorySales.Application.Specifications;
 using InventorySales.Domain.Entities;
-using InventorySales.Domain.Entities.Auth;
+using Microsoft.EntityFrameworkCore;
 
 namespace InventorySales.Application.Features.Sales.Queries.GetSales
 {
@@ -23,9 +22,7 @@ namespace InventorySales.Application.Features.Sales.Queries.GetSales
         {
             var userId = _userInfo.UserId;
 
-            var spec = new SaleByUserSpecification(userId);
-
-            var sales = await _uow.Repository<Sale>().ListAsync(spec);
+            var sales = await _uow.Repository<Sale>().Query().Where(u => u.CreatedById == userId).ToListAsync(cancellationToken);
 
             return _mapper.Map<List<SaleDto>>(sales);
         }

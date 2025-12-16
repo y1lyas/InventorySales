@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq.Expressions;
 
 namespace InventorySales.Application.Interfaces
 {
@@ -11,12 +6,10 @@ namespace InventorySales.Application.Interfaces
     {
         IQueryable<T> Query();
         Task<T> GetByIdAsync(Guid id);
-        Task<T?> GetAsync(Expression<Func<T, bool>> predicate);        
-       Task<IEnumerable<T>> GetAllAsync();
+        Task<T?> GetAsync(Expression<Func<T, bool>> predicate);
+        Task<IEnumerable<T>> GetAllAsync();
         Task AddAsync(T entity);
         Task UpdateAsync(T entity);
         Task DeleteAsync(T entity);
-        Task<T?> GetBySpecAsync(ISpecification<T> spec);
-        Task<List<T>> ListAsync(ISpecification<T> spec);
     }
 }
