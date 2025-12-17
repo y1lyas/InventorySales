@@ -16,9 +16,9 @@ namespace InventorySales.API.Controllers
         }
 
         [HttpPost("make-sale")]
-        public async Task<IActionResult> MakeSale([FromBody] MakeSaleDto dto)
+        public async Task<IActionResult> MakeSale([FromBody] MakeSaleCommand request)
         {
-            var saleId = await _mediator.Send(new MakeSaleCommand(dto.ProductId, dto.Quantity));
+            var saleId = await _mediator.Send(request);
             return Ok(new { saleId });
         }
         [HttpGet("sales")]

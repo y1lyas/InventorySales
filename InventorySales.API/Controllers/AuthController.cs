@@ -2,7 +2,7 @@
 using InventorySales.Application.Features.Users.Commands.Refresh;
 using InventorySales.Application.Features.Users.Commands.Register;
 using InventorySales.Application.Features.Users.Commands.RevokeRefresh;
-using InventorySales.Application.Features.Users.DTOs;
+using Microsoft.AspNetCore.Authorization;
 
 namespace InventorySales.API.Controllers
 {
@@ -18,28 +18,29 @@ namespace InventorySales.API.Controllers
         }
 
         [HttpPost("Register")]
-        public async Task<IActionResult> Register([FromBody] RegisterUserDto dto, CancellationToken ct)
+        public async Task<IActionResult> Register([FromBody] RegisterUserCommand request)
         {
-            var tokens = await _mediator.Send(new RegisterUserCommand(dto.Password, dto.Email));
+            var tokens = await _mediator.Send(request);
             return Ok(tokens);
         }
 
         [HttpPost("Login")]
-        public async Task<IActionResult> Login([FromBody] LoginUserDto dto, CancellationToken ct)
+        public async Task<IActionResult> Login([FromBody] LoginUserCommand request)
         {
-            var tokens = await _mediator.Send(new LoginUserCommand(dto.Password, dto.Email));
+            var tokens = await _mediator.Send(request);
             return Ok(tokens);
         }
-
+        [Authorize]
         [HttpPost("Refresh")]
-        public async Task<IActionResult> Refresh(CancellationToken ct)
+        public async Task<IActionResult> Refresh()
         {
             var command = new RefreshTokenCommand();
             var tokens = await _mediator.Send(command);
             return Ok(tokens);
         }
+        [Authorize]
         [HttpPost("Revoke")]
-        public async Task<IActionResult> Revoke(CancellationToken ct)
+        public async Task<IActionResult> Revoke()
         {
             var command = new RevokeRefreshTokenCommand();
             await _mediator.Send(command);

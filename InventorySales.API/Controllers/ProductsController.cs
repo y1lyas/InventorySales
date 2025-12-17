@@ -5,6 +5,7 @@ using InventorySales.Application.Features.Products.Commands.UpdatePrice;
 using InventorySales.Application.Features.Products.DTOs;
 using InventorySales.Application.Features.Products.Queries.GetLowStock;
 using InventorySales.Application.Features.Products.Queries.GetProducts;
+using Microsoft.AspNetCore.Authorization;
 
 namespace InventorySales.API.Controllers
 {
@@ -25,31 +26,32 @@ namespace InventorySales.API.Controllers
             var result = await _mediator.Send(new GetProductsQuery());
             return Ok(result);
         }
-
+        [Authorize]
         [HttpPost]
-        public async Task<IActionResult> CreateProduct([FromBody] CreateProductDto dto)
+        public async Task<IActionResult> CreateProduct([FromBody] CreateProductCommand request)
         {
-            var productId = await _mediator.Send(new CreateProductCommand(dto.Name, dto.UnitPrice));
+            var productId = await _mediator.Send(request);
             return Created(string.Empty, productId);
         }
+        [Authorize]
         [HttpPut("price")]
-        public async Task<IActionResult> UpdatePrice([FromBody] UpdatePriceDto dto)
+        public async Task<IActionResult> UpdatePrice([FromBody] UpdateProductPriceCommand request)
         {
-            await _mediator.Send(new UpdateProductPriceCommand(dto.ProductId, dto.NewPrice));
+            await _mediator.Send(request);
             return NoContent();
         }
-
+        [Authorize]
         [HttpPost("increase-stock")]
-        public async Task<IActionResult> IncreaseStock([FromBody] IncreaseStockDto dto)
+        public async Task<IActionResult> IncreaseStock([FromBody] IncreaseStockCommand request)
         {
-            await _mediator.Send(new IncreaseStockCommand(dto.ProductId,dto.Quantity));
+            await _mediator.Send(request);
             return Ok();
         }
-
+        [Authorize]
         [HttpPost("decrease-stock")]
-        public async Task<IActionResult> DecreaseStock([FromBody] DecreaseStockDto dto)
+        public async Task<IActionResult> DecreaseStock([FromBody] DecreaseStockCommand request)
         {
-                await _mediator.Send(new DecreaseStockCommand(dto.ProductId, dto.Quantity));
+                await _mediator.Send(request);
             return Ok();
         }
         [HttpGet("low-stock")]
