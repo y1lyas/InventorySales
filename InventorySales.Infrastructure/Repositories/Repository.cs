@@ -1,4 +1,4 @@
-﻿using InventorySales.Application.Interfaces;
+﻿using InventorySales.Application.Abstractions.Repositories;
 using InventorySales.Infrastructure.Persistence;
 using System.Linq.Expressions;
 

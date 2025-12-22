@@ -1,4 +1,4 @@
-﻿using InventorySales.Application.Interfaces;
+﻿using InventorySales.Application.Abstractions.Services;
 
 namespace InventorySales.Application.Services
 {

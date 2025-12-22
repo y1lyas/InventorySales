@@ -1,4 +1,4 @@
-﻿using InventorySales.Application.Interfaces;
+﻿using InventorySales.Application.Abstractions.Services;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;

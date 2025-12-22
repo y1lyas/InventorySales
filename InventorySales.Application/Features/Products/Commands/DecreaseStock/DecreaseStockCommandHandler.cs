@@ -1,5 +1,5 @@
-﻿using InventorySales.Application.Exceptions;
-using InventorySales.Application.Interfaces;
+﻿using InventorySales.Application.Abstractions;
+using InventorySales.Application.Exceptions;
 using InventorySales.Domain.Entities;
 
 namespace InventorySales.Application.Features.Products.Commands.DecreaseStock

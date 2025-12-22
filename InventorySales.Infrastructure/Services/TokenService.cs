@@ -1,4 +1,4 @@
-﻿using InventorySales.Application.Interfaces;
+﻿using InventorySales.Application.Abstractions.Services;
 using InventorySales.Domain.Entities.Auth;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;

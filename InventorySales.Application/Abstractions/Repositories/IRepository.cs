@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace InventorySales.Application.Interfaces
+namespace InventorySales.Application.Abstractions.Repositories
 {
     public interface IRepository<T> where T : class
     {

@@ -1,5 +1,6 @@
-﻿using InventorySales.Application.Exceptions;
-using InventorySales.Application.Interfaces;
+﻿using InventorySales.Application.Abstractions;
+using InventorySales.Application.Abstractions.Services;
+using InventorySales.Application.Exceptions;
 using InventorySales.Domain.Entities.Auth;
 
 namespace InventorySales.Application.Features.Users.Commands.Register

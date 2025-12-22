@@ -1,4 +1,5 @@
 using InventorySales.DependencyInjection;
+using InventorySales.Infrastructure.RedisCache;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -33,6 +34,9 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_key)),
     };
 });
+
+builder.Services.Configure<CacheSettings>(builder.Configuration.GetSection("CacheSettings"));
+
 
 builder.Services.AddAuthorization();
 builder.Services.AddControllers();

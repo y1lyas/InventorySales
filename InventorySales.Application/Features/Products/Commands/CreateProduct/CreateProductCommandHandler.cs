@@ -1,4 +1,5 @@
-﻿using InventorySales.Application.Interfaces;
+﻿using InventorySales.Application.Abstractions;
+using InventorySales.Application.Abstractions.Services;
 using InventorySales.Domain.Entities;
 
 namespace InventorySales.Application.Features.Products.Commands.CreateProduct

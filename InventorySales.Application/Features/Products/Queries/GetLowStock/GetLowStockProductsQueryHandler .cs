@@ -1,5 +1,5 @@
-﻿using InventorySales.Application.Features.Products.DTOs;
-using InventorySales.Application.Interfaces;
+﻿using InventorySales.Application.Abstractions;
+using InventorySales.Application.Features.Products.DTOs;
 using InventorySales.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 

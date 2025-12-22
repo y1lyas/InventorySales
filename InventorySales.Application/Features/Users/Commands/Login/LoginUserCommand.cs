@@ -1,7 +1,14 @@
-﻿using InventorySales.Application.Interfaces;
+﻿using InventorySales.Application.Abstractions.Services;
+using System.ComponentModel;
 
 namespace InventorySales.Application.Features.Users.Commands.Login
 {
-    public record LoginUserCommand(string Email, string Password) : IRequest<TokenResult>;
+    public class LoginUserCommand : IRequest<TokenResult>
+    {
+        [DefaultValue("1@gmail.com")]
+        public string Email { get; set; }
+        [DefaultValue("12345678")]
+        public string Password { get; set; }
+    }
 
 }

@@ -1,4 +1,6 @@
-﻿namespace InventorySales.Application.Interfaces
+﻿using InventorySales.Application.Abstractions.Repositories;
+
+namespace InventorySales.Application.Abstractions
 {
     public interface IUnitOfWork : IDisposable
     {

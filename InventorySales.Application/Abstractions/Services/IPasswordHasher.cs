@@ -1,5 +1,4 @@
-﻿
-namespace InventorySales.Application.Interfaces
+﻿namespace InventorySales.Application.Abstractions.Services
 {
     public interface IPasswordHasher
     {

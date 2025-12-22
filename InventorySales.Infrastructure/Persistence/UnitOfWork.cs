@@ -1,4 +1,5 @@
-﻿using InventorySales.Application.Interfaces;
+﻿using InventorySales.Application.Abstractions;
+using InventorySales.Application.Abstractions.Repositories;
 using InventorySales.Domain.Entities;
 using InventorySales.Domain.Entities.Auth;
 using InventorySales.Infrastructure.Repositories;

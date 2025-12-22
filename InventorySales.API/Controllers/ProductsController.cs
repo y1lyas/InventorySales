@@ -20,10 +20,10 @@ namespace InventorySales.API.Controllers
             _mediator = mediator;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetProducts()
+        [HttpGet("GetAll")]
+        public async Task<IActionResult> GetAllProducts()
         {
-            var result = await _mediator.Send(new GetProductsQuery());
+            var result = await _mediator.Send(new GetAllProductsQuery());
             return Ok(result);
         }
         [Authorize]
