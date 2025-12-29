@@ -23,7 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\InventorySales.Application\InventorySales.Application.csproj" />
-    <ProjectReference Include="..\InventorySales.Infrastructure.DependencyInjection\InventorySales.DependencyInjection.csproj" />
+    <ProjectReference Include="..\InventorySales.Infrastructure\InventorySales.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

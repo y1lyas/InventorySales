@@ -11,5 +11,6 @@ namespace InventorySales.Application.Abstractions.RedisCache
     {
         Task<T?> GetAsync<T>(string cacheKey);
         Task SetAsync<T>(string cacheKey, T value, TimeSpan ttl);
+        Task RemoveAsync(string cacheKey);
     }
 }

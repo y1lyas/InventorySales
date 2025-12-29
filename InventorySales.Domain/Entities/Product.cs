@@ -40,6 +40,8 @@ namespace InventorySales.Domain.Entities
             UnitPrice = newPrice;
             ModifiedById = userId;
             ModifiedAt = DateTime.UtcNow;
+            AddDomainEvent(new ProductModifiedEvent(this));
+
         }
 
         public void IncreaseStock(int quantity)
@@ -51,6 +53,8 @@ namespace InventorySales.Domain.Entities
 
             StockMovements ??= new List<StockMovement>();
             StockMovements.Add(new StockMovement(Id ,MovementType.Increase, quantity, CreatedById));
+            AddDomainEvent(new ProductModifiedEvent(this));
+
         }
 
         public void DecreaseStock(int quantity)
@@ -62,6 +66,8 @@ namespace InventorySales.Domain.Entities
 
             CurrentStock -= quantity;
             StockMovements.Add(new StockMovement(Id, MovementType.Decrease, quantity, CreatedById));
+            AddDomainEvent(new ProductModifiedEvent(this));
+
         }
 
         public void ApplySale(int quantity)

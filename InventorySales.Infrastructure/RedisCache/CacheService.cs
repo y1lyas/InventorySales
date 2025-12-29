@@ -33,7 +33,6 @@ namespace InventorySales.Infrastructure.RedisCache
                 ? JsonSerializer.Deserialize<T>(value!)
                 : default;
         }
-
         public async Task SetAsync<T>(string cacheKey, T value, TimeSpan ttl)
         {
             if (ttl <= TimeSpan.Zero)
@@ -41,6 +40,13 @@ namespace InventorySales.Infrastructure.RedisCache
 
             var json = JsonSerializer.Serialize(value);
             await _db.StringSetAsync(key: cacheKey, value: json, expiry: ttl);
+        }
+        public async Task RemoveAsync(string cacheKey)
+        {
+            if (string.IsNullOrEmpty(cacheKey))
+                return;
+
+            await _db.KeyDeleteAsync(cacheKey);
         }
     }
 }
