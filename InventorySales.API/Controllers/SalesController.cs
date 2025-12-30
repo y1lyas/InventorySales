@@ -1,6 +1,7 @@
 ﻿using InventorySales.Application.Features.Sales.Commands.MakeSale;
 using InventorySales.Application.Features.Sales.DTOs;
 using InventorySales.Application.Features.Sales.Queries.GetSales;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace InventorySales.API.Controllers
 {
@@ -21,6 +22,7 @@ namespace InventorySales.API.Controllers
             var saleId = await _mediator.Send(request);
             return Ok(new { saleId });
         }
+
         [HttpGet("sales")]
         public async Task<IActionResult> GetUserSales()
         {

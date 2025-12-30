@@ -26,7 +26,7 @@ namespace InventorySales.Application.Features.Users.Commands.Refresh
             var user = await _uow.Repository<User>().Query().Where(u => u.Id == userId)
                 .Include(u => u.RefreshTokens)
                 .FirstOrDefaultAsync(cancellationToken)
-                     ?? throw new RefreshTokenInvalidException();
+                     ?? throw new UserWithRefreshTokenNotFound();
 
             var rt = user.RefreshTokens.Where(r => r.RevokedAt == null).FirstOrDefault();
 

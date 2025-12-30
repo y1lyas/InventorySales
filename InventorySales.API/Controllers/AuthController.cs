@@ -3,6 +3,7 @@ using InventorySales.Application.Features.Users.Commands.Refresh;
 using InventorySales.Application.Features.Users.Commands.Register;
 using InventorySales.Application.Features.Users.Commands.RevokeRefresh;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace InventorySales.API.Controllers
 {
@@ -16,14 +17,14 @@ namespace InventorySales.API.Controllers
         {
             _mediator = mediator;
         }
-
+        [EnableRateLimiting("fixed")]
         [HttpPost("Register")]
         public async Task<IActionResult> Register([FromBody] RegisterUserCommand request)
         {
             var tokens = await _mediator.Send(request);
             return Ok(tokens);
         }
-
+        [EnableRateLimiting("fixed")]
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] LoginUserCommand request)
         {

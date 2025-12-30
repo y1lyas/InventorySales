@@ -2,15 +2,28 @@ using InventorySales.Application;
 using InventorySales.Infrastructure;
 using InventorySales.Infrastructure.RedisCache;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration);
+
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    options.AddFixedWindowLimiter("fixed", limiterOptions =>
+ {
+     limiterOptions.PermitLimit = 5;
+     limiterOptions.Window = TimeSpan.FromMinutes(1);
+     limiterOptions.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+     limiterOptions.QueueLimit = 0;
+ });
+});
 
 var _key = builder.Configuration["Jwt:Key"];
 var _issuer = builder.Configuration["Jwt:Issuer"];
@@ -82,4 +95,5 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
+app.UseRateLimiter();
 app.Run();

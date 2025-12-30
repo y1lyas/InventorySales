@@ -6,6 +6,7 @@ using InventorySales.Application.Features.Products.DTOs;
 using InventorySales.Application.Features.Products.Queries.GetLowStock;
 using InventorySales.Application.Features.Products.Queries.GetProducts;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace InventorySales.API.Controllers
 {
@@ -19,13 +20,14 @@ namespace InventorySales.API.Controllers
         {
             _mediator = mediator;
         }
-
+        [EnableRateLimiting("fixed")]
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAllProducts()
         {
             var result = await _mediator.Send(new GetAllProductsQuery());
             return Ok(result);
         }
+        [EnableRateLimiting("fixed")]
         [Authorize]
         [HttpPost]
         public async Task<IActionResult> CreateProduct([FromBody] CreateProductCommand request)
