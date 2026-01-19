@@ -1,10 +1,5 @@
 ﻿using InventorySales.Application.Abstractions.RedisCache;
 using InventorySales.Domain.DomainEvents.Events;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace InventorySales.Application.Features.Products.Events
 {
@@ -18,7 +13,7 @@ namespace InventorySales.Application.Features.Products.Events
         }
         public async Task Handle(ProductModifiedEvent notification, CancellationToken cancellationToken)
         {
-            await _cacheService.RemoveAsync("GetAllProducts");
+            await _cacheService.RemoveByTagAsync("Products");
         }
     }
 }

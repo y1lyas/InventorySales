@@ -1,15 +1,11 @@
-﻿using InventorySales.Application.Abstractions.RedisCache;
+﻿using InventorySales.Application.Attributes;
+using InventorySales.Application.Features.Interfaces;
 using InventorySales.Application.Features.Products.DTOs;
-using System.Threading.Tasks;
 
 namespace InventorySales.Application.Features.Products.Queries.GetProducts
 {
-    public class GetAllProductsQuery() : IRequest<List<ProductDto>>, ICacheableQuery
-    {
-        public string CacheKey => "GetAllProducts";
-
-        public TimeSpan CacheDuration => TimeSpan.FromMinutes(1);
-    }
+    [Cacheable(60, "Products")]
+    public sealed record GetAllProductsQuery : IRequest<List<ProductDto>>, IQuery;
 
 
 }

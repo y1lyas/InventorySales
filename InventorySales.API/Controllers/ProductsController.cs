@@ -2,7 +2,6 @@
 using InventorySales.Application.Features.Products.Commands.DecreaseStock;
 using InventorySales.Application.Features.Products.Commands.IncreaseStock;
 using InventorySales.Application.Features.Products.Commands.UpdatePrice;
-using InventorySales.Application.Features.Products.DTOs;
 using InventorySales.Application.Features.Products.Queries.GetLowStock;
 using InventorySales.Application.Features.Products.Queries.GetProducts;
 using Microsoft.AspNetCore.Authorization;
@@ -20,7 +19,7 @@ namespace InventorySales.API.Controllers
         {
             _mediator = mediator;
         }
-        [EnableRateLimiting("fixed")]
+        [Authorize(Policy = "ProductRead")]
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAllProducts()
         {
@@ -28,34 +27,35 @@ namespace InventorySales.API.Controllers
             return Ok(result);
         }
         [EnableRateLimiting("fixed")]
-        [Authorize]
+        [Authorize(Policy = "ProductCreate")]
         [HttpPost]
         public async Task<IActionResult> CreateProduct([FromBody] CreateProductCommand request)
         {
             var productId = await _mediator.Send(request);
             return Created(string.Empty, productId);
         }
-        [Authorize]
+        [Authorize(Policy = "ProductUpdatePrice")]
         [HttpPut("price")]
         public async Task<IActionResult> UpdatePrice([FromBody] UpdateProductPriceCommand request)
         {
             await _mediator.Send(request);
             return NoContent();
         }
-        [Authorize]
+        [Authorize(Policy = "StockIncrease")]
         [HttpPost("increase-stock")]
         public async Task<IActionResult> IncreaseStock([FromBody] IncreaseStockCommand request)
         {
             await _mediator.Send(request);
             return Ok();
         }
-        [Authorize]
+        [Authorize(Policy = "StockDecrease")]
         [HttpPost("decrease-stock")]
         public async Task<IActionResult> DecreaseStock([FromBody] DecreaseStockCommand request)
         {
                 await _mediator.Send(request);
             return Ok();
         }
+        [Authorize(Policy = "StockReadLow")]
         [HttpGet("low-stock")]
         public async Task<IActionResult> GetLowStock([FromQuery] int threshold = 5)
         {

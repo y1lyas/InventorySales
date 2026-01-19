@@ -21,9 +21,4 @@
     <ProjectReference Include="..\InventorySales.Domain\InventorySales.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Features\Users\DTOs\" />
-    <Folder Include="Features\Users\Maps\" />
-  </ItemGroup>
-
 </Project>

@@ -1,4 +1,6 @@
-﻿namespace InventorySales.Application.Features.Products.Commands.UpdatePrice
+﻿using InventorySales.Application.Features.Interfaces;
+
+namespace InventorySales.Application.Features.Products.Commands.UpdatePrice
 {
-    public record UpdateProductPriceCommand(Guid ProductId, decimal NewPrice) : IRequest<Unit>;
+    public record UpdateProductPriceCommand(Guid ProductId, decimal NewPrice) : IRequest<Unit>, ICommand;
 }

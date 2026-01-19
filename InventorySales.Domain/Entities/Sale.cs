@@ -11,7 +11,7 @@ namespace InventorySales.Domain.Entities
         public decimal TotalPrice { get; private set; }
         public DateTime SaleDate { get; private set; }
         protected Sale() { }
-        public Sale(Guid productId, int quantity, decimal unitPrice, Guid userId)
+        public Sale(Guid productId, int quantity, decimal unitPrice, string userId)
         {
             if (quantity <= 0)
                 throw new DomainException("Quantity must be positive.");

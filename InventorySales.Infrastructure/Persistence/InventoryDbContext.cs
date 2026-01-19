@@ -4,6 +4,7 @@ using InventorySales.Domain.Entities.Auth;
 using InventorySales.Domain.Entities.Common;
 using InventorySales.Infrastructure.ModelBuilders;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 
 namespace InventorySales.Infrastructure.Persistence
@@ -11,19 +12,19 @@ namespace InventorySales.Infrastructure.Persistence
     public class InventoryDbContext : DbContext
     {
         public readonly IMediator _mediator;
+        private readonly ILogger<InventoryDbContext> _logger;
 
-        public InventoryDbContext(DbContextOptions options, IMediator mediator)
+        public InventoryDbContext(DbContextOptions options, IMediator mediator, ILogger<InventoryDbContext> logger)
          : base(options)
         {
             _mediator = mediator;
+            _logger = logger;
         }
 
         public DbSet<Product> Products { get; set; }
         public DbSet<StockMovement> StockMovements { get; set; }
         public DbSet<Sale> Sales { get; set; }
         public DbSet<User> Users { get; set; }
-        public DbSet<Role> Roles { get; set; }
-        public DbSet<RefreshToken> RefreshTokens { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -32,6 +33,9 @@ namespace InventorySales.Infrastructure.Persistence
         }
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
+
+            _logger.LogWarning("SaveChanges called");
+
             var domainEntities = ChangeTracker.Entries()
                .Where(e => e.Entity is IHasDomainEvents de && de.DomainEvents.Any())
                .Select(e => (IHasDomainEvents)e.Entity)

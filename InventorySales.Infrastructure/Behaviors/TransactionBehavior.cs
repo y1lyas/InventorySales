@@ -1,5 +1,7 @@
-﻿using InventorySales.Infrastructure.Persistence;
+﻿using InventorySales.Application.Features.Interfaces;
+using InventorySales.Infrastructure.Persistence;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,13 +13,19 @@ namespace InventorySales.Infrastructure.Behaviours
     public class TransactionBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     {
         private readonly InventoryDbContext _context;
-        public TransactionBehavior(InventoryDbContext context)
+        private readonly ILogger<TransactionBehavior<TRequest, TResponse>> _logger;
+        public TransactionBehavior(InventoryDbContext context, ILogger<TransactionBehavior<TRequest, TResponse>> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
+
+            if (request is not ICommand)
+                return await next();
+
             var strategy = _context.Database.CreateExecutionStrategy();
 
             return await strategy.ExecuteAsync(async () =>

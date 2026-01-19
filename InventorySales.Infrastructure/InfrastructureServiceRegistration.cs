@@ -1,9 +1,13 @@
 ﻿using InventorySales.Application.Abstractions;
 using InventorySales.Application.Abstractions.RedisCache;
 using InventorySales.Application.Abstractions.Services;
+using InventorySales.Application.Behaviors;
+using InventorySales.Application.Common;
+using InventorySales.Infrastructure.Behaviours;
 using InventorySales.Infrastructure.Persistence;
 using InventorySales.Infrastructure.RedisCache;
 using InventorySales.Infrastructure.Services;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -28,10 +32,11 @@ namespace InventorySales.Infrastructure
             });
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddTransient<ICacheService, CacheService>();
+            services.AddSingleton<ICacheService, CacheService>();
+            services.AddSingleton<ICacheKeyGenerator, CacheKeyGenerator>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-            services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IUserContext, UserContext>();
 
             return services;
         }

@@ -13,11 +13,8 @@ namespace InventorySales.Application.Features.Products.Events
         }
         public async Task Handle(ProductCreatedEvent notification, CancellationToken cancellationToken)
         {
-            await _cacheService.RemoveAsync("GetAllProducts");
 
-            // Eğer ürüne özel cache anahtarı kullanıyorsanız; örnek:
-            //if (notification.Product.Id != null)
-            //    await _cacheService.RemoveAsync($"Product:{notification.Product.Id}");
+            await _cacheService.RemoveByTagAsync("Products");
 
             Console.WriteLine($"Product created successfully: Product Name : {notification.Product.Name} | Unit Price {notification.Product.UnitPrice} ");
         }

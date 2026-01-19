@@ -1,4 +1,4 @@
-﻿using InventorySales.Application.Abstractions.Services;
+﻿ using InventorySales.Application.Abstractions.Services;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.WebRequestMethods;
 
 namespace InventorySales.Infrastructure.Services
 {
@@ -19,21 +20,17 @@ namespace InventorySales.Infrastructure.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public Guid UserId
-        {
-            get
-            {
-                var raw = _httpContextAccessor.HttpContext?
-                    .User?
-                    .FindFirst(ClaimTypes.NameIdentifier)?
-                    .Value;
+        public string UserId =>
+      _httpContextAccessor.HttpContext?
+          .User?
+          .FindFirst(ClaimTypes.NameIdentifier)?
+          .Value;
 
-                if (!Guid.TryParse(raw, out var guidValue))
-                    throw new InvalidOperationException("UserId geçerli bir Guid değil.");
-
-                return guidValue;
-            }
-        }
+        public string? Email =>
+        _httpContextAccessor.HttpContext?
+             .User?
+             .FindFirst(ClaimTypes.Email)?
+             .Value;
 
     }
 }

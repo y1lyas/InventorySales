@@ -10,13 +10,13 @@ namespace InventorySales.Domain.Entities
         public string Name { get; private set; }
         public decimal UnitPrice { get; private set; }
         public int CurrentStock { get; private set; }
-        public Guid? ModifiedById { get; private set; } 
+        public string? ModifiedById { get; private set; } 
         public DateTime? ModifiedAt { get; private set; }
         public List<StockMovement> StockMovements { get; private set; } = [];
         public Product()
         {
         }
-        public Product(string name, decimal unitPrice, Guid userId)
+        public Product(string name, decimal unitPrice, string userId)
         {
             if (string.IsNullOrWhiteSpace(name))
                 throw new DomainException("Product name cannot be empty.");
@@ -32,7 +32,7 @@ namespace InventorySales.Domain.Entities
             AddDomainEvent(new ProductCreatedEvent(this));
 
         }
-        public void UpdatePrice(decimal newPrice, Guid? userId)
+        public void UpdatePrice(decimal newPrice, string? userId)
         {
             if (newPrice < 0)
                 throw new DomainException("UnitPrice cannot be negative.");

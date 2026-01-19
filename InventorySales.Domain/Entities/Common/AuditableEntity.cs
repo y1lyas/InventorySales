@@ -9,7 +9,7 @@ namespace InventorySales.Domain.Entities.Common
 {
     public abstract class AuditableEntity<T> : BaseEntity<T>
     {
-        public Guid CreatedById { get; protected set; }
+        public string CreatedById { get; protected set; }
     
     }
 }

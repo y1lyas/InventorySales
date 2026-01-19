@@ -8,14 +8,15 @@ public class UserModelBuilder : IEntityTypeConfiguration<User>
     {
         builder.HasKey(u => u.Id);
 
-        builder.HasMany(u => u.RefreshTokens).WithOne();
-        builder.HasMany(u => u.Roles).WithMany();
-        builder.Property(x => x.PasswordHash)
-            .IsRequired()
-            .HasMaxLength(200);
+        builder.Property(x => x.ExternalId)
+              .IsRequired()
+              .HasMaxLength(100);
 
-        builder.Property(x => x.Email)
-            .IsRequired()
-            .HasMaxLength(200);
+        builder.HasIndex(x => x.ExternalId)
+              .IsUnique();
+
+        builder.Property(x => x.CreatedDate)
+              .IsRequired();
+
     }
 }

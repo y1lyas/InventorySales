@@ -2,6 +2,8 @@
 {
     public interface IUserService
     {
-        public Guid UserId { get; }
+        public string UserId { get; }
+        string? Email { get; }
+
     }
 }

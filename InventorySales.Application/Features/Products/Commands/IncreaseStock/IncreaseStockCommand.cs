@@ -1,4 +1,6 @@
-﻿namespace InventorySales.Application.Features.Products.Commands.IncreaseStock
+﻿using InventorySales.Application.Features.Interfaces;
+
+namespace InventorySales.Application.Features.Products.Commands.IncreaseStock
 {
-    public record IncreaseStockCommand(Guid ProductId, int Quantity) : IRequest<Unit>;
+    public record IncreaseStockCommand(Guid ProductId, int Quantity) : IRequest<Unit>, ICommand;
 }
