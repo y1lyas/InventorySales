@@ -19,6 +19,7 @@ namespace InventorySales.API.Controllers
         {
             _mediator = mediator;
         }
+        [EnableRateLimiting("read-policy")]
         [Authorize(Policy = "ProductRead")]
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAllProducts()
@@ -26,7 +27,7 @@ namespace InventorySales.API.Controllers
             var result = await _mediator.Send(new GetAllProductsQuery());
             return Ok(result);
         }
-        [EnableRateLimiting("fixed")]
+        [EnableRateLimiting("write-policy")]
         [Authorize(Policy = "ProductCreate")]
         [HttpPost]
         public async Task<IActionResult> CreateProduct([FromBody] CreateProductCommand request)
@@ -34,6 +35,7 @@ namespace InventorySales.API.Controllers
             var productId = await _mediator.Send(request);
             return Created(string.Empty, productId);
         }
+        [EnableRateLimiting("write-policy")]
         [Authorize(Policy = "ProductUpdatePrice")]
         [HttpPut("price")]
         public async Task<IActionResult> UpdatePrice([FromBody] UpdateProductPriceCommand request)
@@ -41,6 +43,7 @@ namespace InventorySales.API.Controllers
             await _mediator.Send(request);
             return NoContent();
         }
+        [EnableRateLimiting("write-policy")]
         [Authorize(Policy = "StockIncrease")]
         [HttpPost("increase-stock")]
         public async Task<IActionResult> IncreaseStock([FromBody] IncreaseStockCommand request)
@@ -48,6 +51,7 @@ namespace InventorySales.API.Controllers
             await _mediator.Send(request);
             return Ok();
         }
+        [EnableRateLimiting("write-policy")]
         [Authorize(Policy = "StockDecrease")]
         [HttpPost("decrease-stock")]
         public async Task<IActionResult> DecreaseStock([FromBody] DecreaseStockCommand request)
@@ -55,6 +59,7 @@ namespace InventorySales.API.Controllers
                 await _mediator.Send(request);
             return Ok();
         }
+        [EnableRateLimiting("read-policy")]
         [Authorize(Policy = "StockReadLow")]
         [HttpGet("low-stock")]
         public async Task<IActionResult> GetLowStock([FromQuery] int threshold = 5)

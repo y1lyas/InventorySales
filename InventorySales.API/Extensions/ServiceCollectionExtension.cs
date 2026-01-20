@@ -103,13 +103,42 @@ namespace InventorySales.API.Extensions
             services.AddRateLimiter(options =>
             {
                 options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
-                options.AddFixedWindowLimiter("fixed", limiterOptions =>
+
+                options.AddPolicy("read-policy", context =>
+                  RateLimitPartition.GetFixedWindowLimiter(
+                  partitionKey: $"read:{context.Connection.RemoteIpAddress}",
+                  factory: _ => new FixedWindowRateLimiterOptions
+                  {
+                    PermitLimit = 100,
+                    Window = TimeSpan.FromMinutes(1)
+                  }));
+                options.AddPolicy("write-policy", context =>
                 {
-                    limiterOptions.PermitLimit = 5;
-                    limiterOptions.Window = TimeSpan.FromMinutes(1);
-                    limiterOptions.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
-                    limiterOptions.QueueLimit = 0;
+                    var userId =
+                        context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+                    if (!string.IsNullOrEmpty(userId))
+                    {
+                        return RateLimitPartition.GetFixedWindowLimiter(
+                            partitionKey: $"user:{userId}",
+                            factory: _ => new FixedWindowRateLimiterOptions
+                            {
+                                PermitLimit = 10,
+                                Window = TimeSpan.FromMinutes(1),
+                                QueueLimit = 0
+                            });
+                    }
+
+                    return RateLimitPartition.GetFixedWindowLimiter(
+                        partitionKey: $"ip:{context.Connection.RemoteIpAddress}",
+                        factory: _ => new FixedWindowRateLimiterOptions
+                        {
+                            PermitLimit = 5,
+                            Window = TimeSpan.FromMinutes(1),
+                            QueueLimit = 0
+                        });
                 });
+
             });
 
             return services;
