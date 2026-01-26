@@ -26,23 +26,33 @@ namespace InventorySales.Application.Behaviors
 
             var key = _keyGenerator.Generate(request);
 
-            _logger.LogDebug(
-            "Cacheable request detected. Request={Request}, Key={Key}",
-            request.GetType().Name,
-            key);
+            _logger.LogDebug("Cache enabled. Key={Key}", key);
 
-            var cached = await _cacheService.GetAsync<TResponse>(key);
-            if (cached != null)
+            try
             {
-                _logger.LogInformation("Cache HIT for key: {Key}", key);
-                return cached;
+                var cached = await _cacheService.GetAsync<TResponse>(key);
+                if (cached != null)
+                {
+                    _logger.LogDebug("Cache HIT. Key={Key}", key);
+                    return cached;
+                }
             }
-            _logger.LogInformation("Cache MISS for key: {Key}", key);
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Cache GET failed. Key={Key}", key);
+            }
 
             var response = await next();
 
-            await _cacheService.SetAsync(key, response, attr.TtlSeconds, attr.Tags);
+            try
+            {
+                await _cacheService.SetAsync(key, response, attr.TtlSeconds, attr.Tags);
 
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Cache SET failed. Key={Key}", key);
+            }
 
             return response;
         }

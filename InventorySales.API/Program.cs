@@ -24,11 +24,20 @@ Log.Logger = new LoggerConfiguration()
     .CreateLogger();
 
 
-builder.Host.UseSerilog();
+builder.Host.UseSerilog((context, services, configuration) =>
+{
+    configuration
+        .ReadFrom.Configuration(context.Configuration)
+        .ReadFrom.Services(services)
+        .Enrich.FromLogContext();
+});
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.Configure<CacheSettings>(
     builder.Configuration.GetSection("CacheSettings"));
+
 builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
 {
     var settings = sp

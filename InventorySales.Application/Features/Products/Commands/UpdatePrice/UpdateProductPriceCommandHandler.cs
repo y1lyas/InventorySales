@@ -10,33 +10,21 @@ namespace InventorySales.Application.Features.Products.Commands.UpdatePrice
     {
         private readonly IUnitOfWork _uow;
         private readonly IUserContext _userContext;
-        private readonly ILogger<UpdateProductPriceCommandHandler> _logger;
 
-        public UpdateProductPriceCommandHandler(IUnitOfWork uow, IUserContext userContext, ILogger<UpdateProductPriceCommandHandler> logger)
+        public UpdateProductPriceCommandHandler(IUnitOfWork uow, IUserContext userContext)
         {
             _uow = uow;
             _userContext = userContext;
-            _logger = logger;
         }
 
         public async Task<Unit> Handle(UpdateProductPriceCommand request, CancellationToken cancellationToken)
         {
-            _logger.LogInformation(
-            "UpdatePrice started ProductId={ProductId} NewPrice={NewPrice}",
-            request.ProductId,
-            request.NewPrice);
-
             var user = await _userContext.GetCurrentUserAsync(cancellationToken);
 
             var product = await _uow.Repository<Product>().GetByIdAsync(request.ProductId)
                 ?? throw new ProductNotFoundException(request.ProductId);
 
             product.UpdatePrice(request.NewPrice, user.ExternalId);
-
-            _logger.LogInformation(
-            "UpdatePrice completed ProductId={ProductId} CurrentPrice={NewPrice}",
-            request.ProductId,
-            request.NewPrice);
 
             return Unit.Value;
         }

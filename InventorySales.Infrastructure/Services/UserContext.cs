@@ -1,5 +1,6 @@
 ﻿using InventorySales.Application.Abstractions;
 using InventorySales.Application.Abstractions.Services;
+using InventorySales.Application.Exceptions;
 using InventorySales.Domain.Entities.Auth;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -21,8 +22,8 @@ namespace InventorySales.Infrastructure.Services
         }
         public async Task<User> GetCurrentUserAsync(CancellationToken ct)
         {
-            var userId = _userInfo.UserId ?? throw new Exception("User Id not found");
-            var user = await _uow.Repository<User>().Query().FirstOrDefaultAsync(u => u.ExternalId == userId, ct);
+            var externalUserId = _userInfo.UserId ?? throw new UserIdFromHttpContextNotFound();
+            var user = await _uow.Repository<User>().Query().FirstOrDefaultAsync(u => u.ExternalId == externalUserId, ct);
 
             if (user is null)
                 throw new ApplicationException("User doesn't exist");

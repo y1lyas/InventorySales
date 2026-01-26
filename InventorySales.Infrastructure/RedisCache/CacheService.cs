@@ -35,12 +35,6 @@ namespace InventorySales.Infrastructure.RedisCache
             {
                 var value = await _db.StringGetAsync(cacheKey);
 
-                if (value.HasValue)
-                {
-                    _logger.LogDebug("Cache HIT for key: {CacheKey}", cacheKey);
-                    return JsonSerializer.Deserialize<T>(value!);
-                }
-
                 _logger.LogDebug("Cache MISS for key: {CacheKey}", cacheKey);
                 return default;
             }

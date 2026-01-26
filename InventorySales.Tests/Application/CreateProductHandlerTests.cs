@@ -20,18 +20,15 @@ namespace InventorySales.Tests.Application
     {
         private readonly Mock<IUnitOfWork> _uowMock;
         private readonly Mock<IUserContext> _userServiceMock;
-        private readonly Mock<ILogger<CreateProductCommandHandler>> _loggerMock;
         private readonly CreateProductCommandHandler _handler;
         public CreateProductHandlerTests()
         {
             _uowMock = new Mock<IUnitOfWork>();
             _userServiceMock = new Mock<IUserContext>();
-            _loggerMock = new Mock<ILogger<CreateProductCommandHandler>>();
 
             _handler = new CreateProductCommandHandler(
                 _uowMock.Object,
-                _userServiceMock.Object,
-                _loggerMock.Object
+                _userServiceMock.Object
             );
         }
 

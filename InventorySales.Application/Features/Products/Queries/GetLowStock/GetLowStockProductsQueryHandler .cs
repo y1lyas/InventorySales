@@ -10,18 +10,14 @@ namespace InventorySales.Application.Features.Products.Queries.GetLowStock
     {
         private readonly IUnitOfWork _uow;
         private readonly IMapper _mapper;
-        private readonly ILogger<GetLowStockProductsQueryHandler> _logger;
-
-        public GetLowStockProductsQueryHandler(IUnitOfWork uow, IMapper mapper, ILogger<GetLowStockProductsQueryHandler> logger)
+        public GetLowStockProductsQueryHandler(IUnitOfWork uow, IMapper mapper)
         {
             _uow = uow;
             _mapper = mapper;
-            _logger = logger;
         }
 
         public async Task<List<ProductDto>> Handle(GetLowStockProductsQuery request, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("GetLowStockProducts requested");
             var lowStock = await _uow.Repository<Product>().Query()
                 .Where(p => p.CurrentStock < request.Threshold)
                 .AsNoTracking()
