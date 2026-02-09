@@ -3,10 +3,11 @@
 
 namespace InventorySales.Domain.Entities.Common;
 
-public abstract class BaseEntity<T> : IHasDomainEvents
+public abstract class BaseEntity : IHasDomainEvents
 {
-    public T Id { get; protected set; }
-   public DateTime CreatedDate { get; protected set; } = DateTime.UtcNow;
+    public Guid Id { get; protected set; } = Guid.NewGuid();
+
+    public DateTime CreatedDate { get; protected set; } = DateTime.UtcNow;
 
     private readonly List<IDomainEvent> _domainEvents = new();
 

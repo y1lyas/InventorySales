@@ -1,18 +1,19 @@
 ﻿using InventorySales.Domain.DomainEvents.Events;
-using InventorySales.Domain.Entities.Auth;
 using InventorySales.Domain.Entities.Common;
 using InventorySales.Domain.Exceptions;
 
 namespace InventorySales.Domain.Entities
 {
-    public class Product : AuditableEntity<Guid>
+    public class Product : BaseEntity, IAuditableEntity
     {
         public string Name { get; private set; }
         public decimal UnitPrice { get; private set; }
         public int CurrentStock { get; private set; }
-        public string? ModifiedById { get; private set; } 
-        public DateTime? ModifiedAt { get; private set; }
         public List<StockMovement> StockMovements { get; private set; } = [];
+        public string CreatedById { get; set; }
+        public string? ModifiedById { get; set; }
+        public DateTime? ModifiedAt { get; set; }
+
         public Product()
         {
         }
@@ -44,7 +45,7 @@ namespace InventorySales.Domain.Entities
 
         }
 
-        public void IncreaseStock(int quantity)
+        public void IncreaseStock(int quantity, string userId)
         {
             if (quantity <= 0)
                 throw new DomainException("Quantity must be positive.");
@@ -52,12 +53,10 @@ namespace InventorySales.Domain.Entities
             CurrentStock += quantity;
 
             StockMovements ??= new List<StockMovement>();
-            StockMovements.Add(new StockMovement(Id ,MovementType.Increase, quantity, CreatedById));
-            AddDomainEvent(new ProductModifiedEvent(this));
-
+            StockMovements.Add(new StockMovement(Id, MovementType.Increase, quantity, userId));
         }
 
-        public void DecreaseStock(int quantity)
+        public void DecreaseStock(int quantity, string userId)
         {
             if (quantity <= 0)
                 throw new DomainException("Quantity must be positive.");
@@ -65,14 +64,7 @@ namespace InventorySales.Domain.Entities
                 throw new DomainException("Insufficient stock.");
 
             CurrentStock -= quantity;
-            StockMovements.Add(new StockMovement(Id, MovementType.Decrease, quantity, CreatedById));
-            AddDomainEvent(new ProductModifiedEvent(this));
-
-        }
-
-        public void ApplySale(int quantity)
-        {
-            DecreaseStock(quantity);
+            StockMovements.Add(new StockMovement(Id, MovementType.Decrease, quantity, userId));
         }
     }
 }

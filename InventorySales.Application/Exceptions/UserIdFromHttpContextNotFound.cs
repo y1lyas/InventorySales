@@ -1,4 +1,4 @@
-﻿using InventorySales.Application.Base;
+﻿using InventorySales.Application.Exceptions.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;

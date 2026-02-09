@@ -17,9 +17,9 @@ namespace InventorySales.Application.Features.Products.Commands.UpdatePrice
             _userContext = userContext;
         }
 
-        public async Task<Unit> Handle(UpdateProductPriceCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(UpdateProductPriceCommand request, CancellationToken ct)
         {
-            var user = await _userContext.GetCurrentUserAsync(cancellationToken);
+            var user = await _userContext.GetCurrentUserAsync(ct);
 
             var product = await _uow.Repository<Product>().GetByIdAsync(request.ProductId)
                 ?? throw new ProductNotFoundException(request.ProductId);
@@ -30,3 +30,4 @@ namespace InventorySales.Application.Features.Products.Commands.UpdatePrice
         }
     }
 }
+

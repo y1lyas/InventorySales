@@ -1,4 +1,6 @@
-﻿using InventorySales.Application.Features.Interfaces;
+﻿using FluentValidation;
+using InventorySales.Application.Abstractions.RedisCache;
+using InventorySales.Application.Features.Interfaces;
 using InventorySales.Infrastructure.Persistence;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -13,11 +15,13 @@ namespace InventorySales.Infrastructure.Behaviours
     public class TransactionBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     {
         private readonly InventoryDbContext _context;
+        private readonly ICacheService _cache;
         private readonly ILogger<TransactionBehavior<TRequest, TResponse>> _logger;
-        public TransactionBehavior(InventoryDbContext context, ILogger<TransactionBehavior<TRequest, TResponse>> logger)
+        public TransactionBehavior(InventoryDbContext context, ILogger<TransactionBehavior<TRequest, TResponse>> logger, ICacheService cache)
         {
             _context = context;
             _logger = logger;
+            _cache = cache;
         }
 
         public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)

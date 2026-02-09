@@ -1,4 +1,4 @@
-﻿namespace InventorySales.Application.Base
+﻿namespace InventorySales.Application.Exceptions.Base
 {
     public class BaseException : Exception
     {

@@ -1,4 +1,4 @@
-﻿using InventorySales.Application.Base;
+﻿using InventorySales.Application.Exceptions.Base;
 
 namespace InventorySales.Application.Exceptions
 {

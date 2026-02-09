@@ -1,4 +1,5 @@
 ﻿using InventorySales.Application.Abstractions;
+using InventorySales.Application.Abstractions.RedisCache;
 using InventorySales.Application.Abstractions.Repositories;
 using InventorySales.Application.Abstractions.Services;
 using InventorySales.Application.Features.Products.Commands.CreateProduct;
@@ -25,6 +26,7 @@ namespace InventorySales.Tests.Application
         {
             _uowMock = new Mock<IUnitOfWork>();
             _userServiceMock = new Mock<IUserContext>();
+            
 
             _handler = new CreateProductCommandHandler(
                 _uowMock.Object,

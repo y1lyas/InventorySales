@@ -25,11 +25,16 @@ namespace InventorySales.Infrastructure.Repositories
         public async Task AddAsync(T entity) =>
             await Table.AddAsync(entity);
 
-        public async Task UpdateAsync(T entity) =>
+        public Task Update(T entity)
+        {
             Table.Update(entity);
+            return Task.CompletedTask;
+        }
 
-        public async Task DeleteAsync(T entity) =>
+        public Task Delete(T entity)
+        {
             Table.Remove(entity);
-
+            return Task.CompletedTask;
+        }
     }
 }

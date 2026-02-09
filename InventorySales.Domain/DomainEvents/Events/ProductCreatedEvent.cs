@@ -1,12 +1,15 @@
 ﻿using InventorySales.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace InventorySales.Domain.DomainEvents.Events
 {
-    public record ProductCreatedEvent(Product Product) : IDomainEvent;
+    public class ProductCreatedEvent : IDomainEvent
+    {
+        public Product Product { get; }
+        public ProductCreatedEvent(Product product)
+        {
+            Product = product;
+        }
+    }
 
 }

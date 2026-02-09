@@ -1,5 +1,4 @@
-﻿using InventorySales.Domain.Entities.Auth;
-using InventorySales.Domain.Entities.Common;
+﻿using InventorySales.Domain.Entities.Common;
 using InventorySales.Domain.Exceptions;
 
 
@@ -10,12 +9,16 @@ namespace InventorySales.Domain.Entities
         Increase = 0,
         Decrease = 1
     }
-    public class StockMovement : AuditableEntity<int>
+    public class StockMovement : BaseEntity, IAuditableEntity
     {
         public Guid ProductId { get; private set; }
         public Product Product { get; private set; }
         public int Quantity { get; private set; }
         public MovementType MovementType { get; private set; }
+        public string CreatedById { get; set; }
+        public string? ModifiedById { get; set; }
+        public DateTime? ModifiedAt { get; set; }
+
         protected StockMovement() { }
 
         public StockMovement(Guid productId, MovementType type, int quantity, string userId)

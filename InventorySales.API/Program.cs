@@ -1,4 +1,5 @@
 using InventorySales.API.Extensions;
+using InventorySales.API.Middlewares.Audit;
 using InventorySales.API.Middlewares.Auth;
 using InventorySales.Application;
 using InventorySales.Infrastructure;
@@ -6,6 +7,7 @@ using InventorySales.Infrastructure.RedisCache;
 using Microsoft.Extensions.Options;
 using Serilog;
 using StackExchange.Redis;
+using System.Diagnostics;
 using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -65,6 +67,7 @@ if (app.Environment.IsDevelopment())
 app.UseSerilogRequestLogging();
 app.UseHttpsRedirection();
 app.UseRouting();
+app.UseMiddleware<CorrelationMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseMiddleware<UserSyncMiddleware>();

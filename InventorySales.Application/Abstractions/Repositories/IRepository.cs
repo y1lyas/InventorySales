@@ -9,7 +9,7 @@ namespace InventorySales.Application.Abstractions.Repositories
         Task<T?> GetAsync(Expression<Func<T, bool>> predicate);
         Task<IEnumerable<T>> GetAllAsync();
         Task AddAsync(T entity);
-        Task UpdateAsync(T entity);
-        Task DeleteAsync(T entity);
+        Task Update(T entity);
+        Task Delete(T entity);
     }
 }

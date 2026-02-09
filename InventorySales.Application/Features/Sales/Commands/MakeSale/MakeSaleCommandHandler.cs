@@ -12,25 +12,24 @@ namespace InventorySales.Application.Features.Sales.Commands.MakeSale
         private readonly IUserContext _userContext;
 
 
-        public MakeSaleCommandHandler(IUnitOfWork uow, IUserContext userContext)
+        public MakeSaleCommandHandler(IUnitOfWork uow, IUserContext userContext )
         {
             _uow = uow;
             _userContext = userContext;
         }
 
-        public async Task<Guid> Handle(MakeSaleCommand request, CancellationToken cancellationToken)
+        public async Task<Guid> Handle(MakeSaleCommand request, CancellationToken ct)
         {
-            var user = await _userContext.GetCurrentUserAsync(cancellationToken);
+            var user = await _userContext.GetCurrentUserAsync(ct);
 
             var product = await _uow.Repository<Product>().GetByIdAsync(request.ProductId)
                 ?? throw new ProductNotFoundException(request.ProductId);
 
-            product.ApplySale(request.Quantity);
+            product.DecreaseStock(request.Quantity, user.ExternalId);
 
             var sale = new Sale(request.ProductId, request.Quantity, product.UnitPrice, user.ExternalId);
 
             await _uow.Repository<Sale>().AddAsync(sale);
-            await _uow.Repository<Product>().UpdateAsync(product);
 
             return sale.Id;
         }

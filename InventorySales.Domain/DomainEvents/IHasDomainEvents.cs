@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace InventorySales.Domain.DomainEvents
+﻿namespace InventorySales.Domain.DomainEvents
 {
     public interface IHasDomainEvents
     {
