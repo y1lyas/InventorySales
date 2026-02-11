@@ -7,9 +7,6 @@ public class SaleModelBuilder : IEntityTypeConfiguration<Sale>
     public void Configure(EntityTypeBuilder<Sale> builder)
     {
         builder.HasKey(s => s.Id);
-        builder.HasOne<Product>()
-                 .WithMany()
-                 .HasForeignKey(s => s.ProductId);
 
         builder.OwnsOne(s => s.TotalPrice, propBuilder =>
         {
@@ -17,9 +14,13 @@ public class SaleModelBuilder : IEntityTypeConfiguration<Sale>
             propBuilder.Property(m => m.Currency).HasColumnName("Currency");
         });
 
-        builder.OwnsOne(s => s.Quantity, qty =>
-        {
-            qty.Property(q => q.Value).HasColumnName("QuantityAmount");
-        });
+        builder.HasMany(s => s.Items)
+               .WithOne()
+               .HasForeignKey("SaleId") // shadow Fk
+               .IsRequired()
+               .OnDelete(DeleteBehavior.Cascade);
+
+        var navigation = builder.Metadata.FindNavigation(nameof(Sale.Items));
+        navigation.SetPropertyAccessMode(PropertyAccessMode.Field);
     }
 }

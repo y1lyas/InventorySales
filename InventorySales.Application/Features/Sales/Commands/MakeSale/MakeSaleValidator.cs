@@ -1,6 +1,6 @@
 ﻿namespace InventorySales.Application.Features.Sales.Commands.MakeSale
 {
-    public class MakeSaleValidator : AbstractValidator<MakeSaleCommand>
+    public class MakeSaleValidator : AbstractValidator<SaleItemRequest>
     {
         public MakeSaleValidator()
         {

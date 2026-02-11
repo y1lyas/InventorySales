@@ -2,5 +2,5 @@
 
 namespace InventorySales.Application.Features.Sales.Commands.MakeSale
 {
-    public record MakeSaleCommand(Guid ProductId, int Quantity) : IRequest<Guid>, ICommand;
+    public record MakeSaleCommand(List<SaleItemRequest> Items) : IRequest<Guid>, ICommand;
 }
