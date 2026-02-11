@@ -1,11 +1,13 @@
 ﻿using FluentValidation;
 using InventorySales.Application.Abstractions.RedisCache;
 using InventorySales.Application.Features.Interfaces;
+using InventorySales.Infrastructure.Exceptions;
 using InventorySales.Infrastructure.Persistence;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -51,12 +53,18 @@ namespace InventorySales.Infrastructure.Behaviours
 
                     return response;
                 }
+                catch (DbUpdateConcurrencyException)
+                {
+                    await transaction.RollbackAsync(cancellationToken);
+
+                    throw new ConcurrencyException();
+                }
                 catch
                 {
                     await transaction.RollbackAsync(cancellationToken);
                     throw;
                 }
             });
-        }
+        } 
     }
 }

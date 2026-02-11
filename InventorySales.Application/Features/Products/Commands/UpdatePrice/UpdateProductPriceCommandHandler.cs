@@ -2,6 +2,7 @@
 using InventorySales.Application.Abstractions.Services;
 using InventorySales.Application.Exceptions;
 using InventorySales.Domain.Entities;
+using InventorySales.Domain.ValueObjects;
 using Microsoft.Extensions.Logging;
 
 namespace InventorySales.Application.Features.Products.Commands.UpdatePrice
@@ -24,7 +25,9 @@ namespace InventorySales.Application.Features.Products.Commands.UpdatePrice
             var product = await _uow.Repository<Product>().GetByIdAsync(request.ProductId)
                 ?? throw new ProductNotFoundException(request.ProductId);
 
-            product.UpdatePrice(request.NewPrice, user.ExternalId);
+            var price = Money.Create(request.NewPrice, "TRY");
+
+            product.UpdatePrice(price , user.ExternalId);
 
             return Unit.Value;
         }

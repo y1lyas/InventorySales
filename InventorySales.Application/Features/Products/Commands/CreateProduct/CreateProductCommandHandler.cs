@@ -2,7 +2,11 @@
 using InventorySales.Application.Abstractions.RedisCache;
 using InventorySales.Application.Abstractions.Services;
 using InventorySales.Domain.Entities;
+using InventorySales.Domain.Exceptions;
+using InventorySales.Domain.ValueObjects;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System.Data;
 
 namespace InventorySales.Application.Features.Products.Commands.CreateProduct
 {
@@ -21,7 +25,9 @@ namespace InventorySales.Application.Features.Products.Commands.CreateProduct
         {
             var user = await _userContext.GetCurrentUserAsync(ct);
 
-            var product = new Product(request.Name, request.UnitPrice, user.ExternalId);
+            var price = Money.Create(request.UnitPrice, "TRY");
+
+            var product = new Product(request.Sku ,request.Name,price, user.ExternalId);
 
             await _uow.Repository<Product>().AddAsync(product);
 

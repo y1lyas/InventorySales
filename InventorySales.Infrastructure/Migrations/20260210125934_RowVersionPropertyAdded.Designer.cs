@@ -3,6 +3,7 @@ using System;
 using InventorySales.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace InventorySales.Infrastructure.Migrations
 {
     [DbContext(typeof(InventoryDbContext))]
-    partial class InventoryDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260210125934_RowVersionPropertyAdded")]
+    partial class RowVersionPropertyAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -199,7 +202,7 @@ namespace InventorySales.Infrastructure.Migrations
 
             modelBuilder.Entity("InventorySales.Domain.Entities.Product", b =>
                 {
-                    b.OwnsOne("InventorySales.Domain.ValueObjects.Money", "Price", b1 =>
+                    b.OwnsOne("InventorySales.Domain.Entities.ValueObjects.Money", "Price", b1 =>
                         {
                             b1.Property<Guid>("ProductId")
                                 .HasColumnType("uuid");
@@ -221,7 +224,7 @@ namespace InventorySales.Infrastructure.Migrations
                                 .HasForeignKey("ProductId");
                         });
 
-                    b.OwnsOne("InventorySales.Domain.ValueObjects.Quantity", "Stock", b1 =>
+                    b.OwnsOne("InventorySales.Domain.Entities.ValueObjects.Quantity", "Stock", b1 =>
                         {
                             b1.Property<Guid>("ProductId")
                                 .HasColumnType("uuid");
@@ -238,32 +241,7 @@ namespace InventorySales.Infrastructure.Migrations
                                 .HasForeignKey("ProductId");
                         });
 
-                    b.OwnsOne("InventorySales.Domain.ValueObjects.Sku", "Sku", b1 =>
-                        {
-                            b1.Property<Guid>("ProductId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<string>("Value")
-                                .IsRequired()
-                                .HasMaxLength(50)
-                                .HasColumnType("character varying(50)")
-                                .HasColumnName("SKU");
-
-                            b1.HasKey("ProductId");
-
-                            b1.HasIndex("Value")
-                                .IsUnique();
-
-                            b1.ToTable("Products");
-
-                            b1.WithOwner()
-                                .HasForeignKey("ProductId");
-                        });
-
                     b.Navigation("Price")
-                        .IsRequired();
-
-                    b.Navigation("Sku")
                         .IsRequired();
 
                     b.Navigation("Stock")
@@ -278,7 +256,7 @@ namespace InventorySales.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("InventorySales.Domain.ValueObjects.Quantity", "Quantity", b1 =>
+                    b.OwnsOne("InventorySales.Domain.Entities.ValueObjects.Quantity", "Quantity", b1 =>
                         {
                             b1.Property<Guid>("SaleId")
                                 .HasColumnType("uuid");
@@ -295,7 +273,7 @@ namespace InventorySales.Infrastructure.Migrations
                                 .HasForeignKey("SaleId");
                         });
 
-                    b.OwnsOne("InventorySales.Domain.ValueObjects.Money", "TotalPrice", b1 =>
+                    b.OwnsOne("InventorySales.Domain.Entities.ValueObjects.Money", "TotalPrice", b1 =>
                         {
                             b1.Property<Guid>("SaleId")
                                 .HasColumnType("uuid");

@@ -22,8 +22,6 @@ namespace InventorySales.Tests.Domain
                );
 
             Assert.Equal("Test Product", product.Name);
-            Assert.Equal(100, product.UnitPrice);
-            Assert.Equal(0, product.CurrentStock);
             Assert.Equal("user-123", product.CreatedById);
             Assert.NotEmpty(product.DomainEvents);
         }

@@ -19,7 +19,7 @@ namespace InventorySales.Application.Features.Products.Queries.GetLowStock
         public async Task<List<ProductDto>> Handle(GetLowStockProductsQuery request, CancellationToken cancellationToken)
         {
             var lowStock = await _uow.Repository<Product>().Query()
-                .Where(p => p.CurrentStock < request.Threshold)
+                .Where(p => p.Stock.Value < request.Threshold)
                 .AsNoTracking()
                 .ToListAsync();
 

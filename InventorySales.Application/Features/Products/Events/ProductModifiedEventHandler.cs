@@ -18,7 +18,7 @@ namespace InventorySales.Application.Features.Products.Events
         public async Task Handle(ProductModifiedEvent notification, CancellationToken cancellationToken)
         {
             await _cacheService.RemoveByTagAsync("Products");
-            _logger.LogInformation($"Product modified. Product Name : {notification.Product.Name} | Unit Price : {notification.Product.UnitPrice}");
+            _logger.LogInformation($"Product modified. Product Name : {notification.Product.Name} | Unit Price : {notification.Product.Price}");
         }
     }
 }

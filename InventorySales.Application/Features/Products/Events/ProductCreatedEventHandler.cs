@@ -22,7 +22,7 @@ namespace InventorySales.Application.Features.Products.Events
         {
             await _cacheService.RemoveByTagAsync("Products");
 
-            _logger.LogInformation($"Product created successfully: Product Name : {notification.Product.Name} | Unit Price {notification.Product.UnitPrice}");
+            _logger.LogInformation($"Product created successfully: Product Name : {notification.Product.Name} | Unit Price {notification.Product.Price}");
 
         }
     }

@@ -27,7 +27,7 @@ namespace InventorySales.Application.Features.Sales.Commands.MakeSale
 
             product.DecreaseStock(request.Quantity, user.ExternalId);
 
-            var sale = new Sale(request.ProductId, request.Quantity, product.UnitPrice, user.ExternalId);
+            var sale = new Sale(request.ProductId, request.Quantity, product.Price, user.ExternalId);
 
             await _uow.Repository<Sale>().AddAsync(sale);
 

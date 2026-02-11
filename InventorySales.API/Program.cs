@@ -1,6 +1,7 @@
 using InventorySales.API.Extensions;
 using InventorySales.API.Middlewares.Audit;
 using InventorySales.API.Middlewares.Auth;
+using InventorySales.API.Middlewares.GlobalException;
 using InventorySales.Application;
 using InventorySales.Infrastructure;
 using InventorySales.Infrastructure.RedisCache;
@@ -67,10 +68,12 @@ if (app.Environment.IsDevelopment())
 app.UseSerilogRequestLogging();
 app.UseHttpsRedirection();
 app.UseRouting();
+app.UseMiddleware<GlobalExceptionMiddleware>();
 app.UseMiddleware<CorrelationMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseMiddleware<UserSyncMiddleware>();
+
 app.UseRateLimiter();
 app.MapControllers();
 app.Run();

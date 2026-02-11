@@ -1,70 +1,62 @@
 ﻿using InventorySales.Domain.DomainEvents.Events;
 using InventorySales.Domain.Entities.Common;
 using InventorySales.Domain.Exceptions;
+using InventorySales.Domain.ValueObjects;
 
 namespace InventorySales.Domain.Entities
 {
     public class Product : BaseEntity, IAuditableEntity
     {
         public string Name { get; private set; }
-        public decimal UnitPrice { get; private set; }
-        public int CurrentStock { get; private set; }
-        public List<StockMovement> StockMovements { get; private set; } = [];
-        public string CreatedById { get; set; }
+        public Money Price { get; private set; }
+        public Quantity Stock { get; private set; }
+        public Sku Sku { get; private set; }
+        private readonly List<StockMovement> _stockMovements = new();
+        public IReadOnlyCollection<StockMovement> StockMovements => _stockMovements.AsReadOnly(); public string CreatedById { get; set; }
         public string? ModifiedById { get; set; }
         public DateTime? ModifiedAt { get; set; }
 
         public Product()
         {
         }
-        public Product(string name, decimal unitPrice, string userId)
+        public Product(string sku, string name, Money unitPrice, string userId)
         {
             if (string.IsNullOrWhiteSpace(name))
                 throw new DomainException("Product name cannot be empty.");
-            if (unitPrice < 0)
-                throw new DomainException("UnitPrice cannot be negative.");
 
+            Sku = Sku.Create(sku);
             Name = name;
-            UnitPrice = unitPrice;
-            CurrentStock = 0;
-            StockMovements = new List<StockMovement>();
+            Price = unitPrice ?? throw new DomainException("Price is required.");
+            Stock = Quantity.From(0);
             CreatedById = userId;
 
             AddDomainEvent(new ProductCreatedEvent(this));
 
         }
-        public void UpdatePrice(decimal newPrice, string? userId)
+        public void UpdatePrice(Money newPrice, string? userId)
         {
-            if (newPrice < 0)
-                throw new DomainException("UnitPrice cannot be negative.");
-
-            UnitPrice = newPrice;
+            Price = newPrice ?? throw new DomainException("New price is required.");
             ModifiedById = userId;
             ModifiedAt = DateTime.UtcNow;
             AddDomainEvent(new ProductModifiedEvent(this));
-
         }
 
-        public void IncreaseStock(int quantity, string userId)
+        public void IncreaseStock(int amount, string userId)
         {
-            if (quantity <= 0)
-                throw new DomainException("Quantity must be positive.");
+            Stock = Stock.Add(amount);
 
-            CurrentStock += quantity;
+            _stockMovements.Add(new StockMovement(Id, MovementType.Increase, amount, userId));
 
-            StockMovements ??= new List<StockMovement>();
-            StockMovements.Add(new StockMovement(Id, MovementType.Increase, quantity, userId));
+            AddDomainEvent(new StockIncreasedEvent(this));
         }
 
-        public void DecreaseStock(int quantity, string userId)
+        public void DecreaseStock(int amount, string userId)
         {
-            if (quantity <= 0)
-                throw new DomainException("Quantity must be positive.");
-            if (CurrentStock < quantity)
-                throw new DomainException("Insufficient stock.");
+            Stock = Stock.Subtract(amount);
 
-            CurrentStock -= quantity;
-            StockMovements.Add(new StockMovement(Id, MovementType.Decrease, quantity, userId));
+            _stockMovements.Add(new StockMovement(Id, MovementType.Decrease, amount, userId));
+
+            AddDomainEvent(new StockDecreasedEvent(this));
         }
     }
 }

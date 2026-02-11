@@ -7,6 +7,6 @@
         public int Quantity { get; set; }
         public decimal TotalPrice { get; set; }
         public DateTime SaleDate { get; set; }
-        public Guid? CreatedById { get; set; }
+        public string? CreatedById { get; set; }
     }
 }
