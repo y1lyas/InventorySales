@@ -2,6 +2,7 @@
 using InventorySales.Application.Abstractions.Services;
 using InventorySales.Application.Exceptions;
 using InventorySales.Domain.Entities;
+using InventorySales.Domain.Exceptions;
 using Microsoft.Extensions.Logging;
 
 namespace InventorySales.Application.Features.Sales.Commands.MakeSale
@@ -21,14 +22,13 @@ namespace InventorySales.Application.Features.Sales.Commands.MakeSale
         public async Task<Guid> Handle(MakeSaleCommand request, CancellationToken ct)
         {
             var user = await _userContext.GetCurrentUserAsync(ct);
-
-            var product = await _uow.Repository<Product>().GetByIdAsync(request.ProductId)
-                ?? throw new ProductNotFoundException(request.ProductId);
-
-            product.DecreaseStock(request.Quantity, user.ExternalId);
-
-            var sale = new Sale(request.ProductId, request.Quantity, product.Price, user.ExternalId);
-
+            var sale = new Sale(user.ExternalId);
+            foreach (var itemRequest in request.Items)
+            {
+                var product = await _uow.Repository<Product>().GetByIdAsync(itemRequest.ProductId)
+                    ?? throw new ProductNotFoundException(itemRequest.ProductId);
+                sale.AddItem(product, itemRequest.Quantity);
+            }
             await _uow.Repository<Sale>().AddAsync(sale);
 
             return sale.Id;

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using InventorySales.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace InventorySales.Infrastructure.Migrations
 {
     [DbContext(typeof(InventoryDbContext))]
-    partial class InventoryDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260211121046_AddSaleItem")]
+    partial class AddSaleItem
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -103,10 +106,15 @@ namespace InventorySales.Infrastructure.Migrations
                     b.Property<string>("ModifiedById")
                         .HasColumnType("text");
 
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uuid");
+
                     b.Property<byte[]>("RowVersion")
                         .HasColumnType("bytea");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
 
                     b.ToTable("Sales");
                 });
@@ -319,6 +327,29 @@ namespace InventorySales.Infrastructure.Migrations
 
             modelBuilder.Entity("InventorySales.Domain.Entities.Sale", b =>
                 {
+                    b.HasOne("InventorySales.Domain.Entities.Product", null)
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.OwnsOne("InventorySales.Domain.ValueObjects.Quantity", "Quantity", b1 =>
+                        {
+                            b1.Property<Guid>("SaleId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<int>("Value")
+                                .HasColumnType("integer")
+                                .HasColumnName("QuantityAmount");
+
+                            b1.HasKey("SaleId");
+
+                            b1.ToTable("Sales");
+
+                            b1.WithOwner()
+                                .HasForeignKey("SaleId");
+                        });
+
                     b.OwnsOne("InventorySales.Domain.ValueObjects.Money", "TotalPrice", b1 =>
                         {
                             b1.Property<Guid>("SaleId")
@@ -340,6 +371,9 @@ namespace InventorySales.Infrastructure.Migrations
                             b1.WithOwner()
                                 .HasForeignKey("SaleId");
                         });
+
+                    b.Navigation("Quantity")
+                        .IsRequired();
 
                     b.Navigation("TotalPrice")
                         .IsRequired();
