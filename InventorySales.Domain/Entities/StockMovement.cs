@@ -9,16 +9,13 @@ namespace InventorySales.Domain.Entities
         Increase = 0,
         Decrease = 1
     }
-    public class StockMovement : BaseEntity, IAuditableEntity
+    public class StockMovement : BaseEntity
     {
         public Guid ProductId { get; private set; }
         public Product Product { get; private set; }
         public int Quantity { get; private set; }
         public MovementType MovementType { get; private set; }
         public string CreatedById { get; set; }
-        public string? ModifiedById { get; set; }
-        public DateTime? ModifiedAt { get; set; }
-
         protected StockMovement() { }
 
         public StockMovement(Guid productId, MovementType type, int quantity, string userId)

@@ -5,7 +5,6 @@ using InventorySales.Domain.DomainEvents.Events;
 using InventorySales.Domain.Entities;
 using InventorySales.Domain.Entities.Auth;
 using InventorySales.Domain.Entities.Common;
-using InventorySales.Domain.Entities.System;
 using InventorySales.Infrastructure.ModelBuilders;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -26,8 +25,7 @@ namespace InventorySales.Infrastructure.Persistence
         public DbSet<Sale> Sales { get; set; }
         public DbSet<SaleItem> SaleItems { get; set; }
         public DbSet<User> Users { get; set; }
-        public DbSet<AuditLog> AuditLogs { get; set; }
-
+        public DbSet<Category> Categories { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace InventorySales.Infrastructure.Services
+namespace InventorySales.Infrastructure.Services.CorrelationContext
 {
     public class HttpCorrelationContext : ICorrelationContext
     {

@@ -7,6 +7,9 @@ using InventorySales.Infrastructure;
 using InventorySales.Infrastructure.RedisCache;
 using Microsoft.Extensions.Options;
 using Serilog;
+using Serilog.Events;
+using Serilog.Filters;
+using Serilog.Formatting.Json;
 using StackExchange.Redis;
 using System.Diagnostics;
 using System.Security.Claims;
@@ -23,9 +26,9 @@ builder.Services
 
 Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
+    .Enrich.FromLogContext()
     .WriteTo.Console()
     .CreateLogger();
-
 
 builder.Host.UseSerilog((context, services, configuration) =>
 {

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using InventorySales.Application.Abstractions.Services;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,11 +12,13 @@ namespace InventorySales.Application.Behaviors
     : IPipelineBehavior<TRequest, TResponse>
     {
         private readonly ILogger<LoggingBehavior<TRequest, TResponse>> _logger;
+        private readonly IUserService _userService;
 
         public LoggingBehavior(
-            ILogger<LoggingBehavior<TRequest, TResponse>> logger)
+            ILogger<LoggingBehavior<TRequest, TResponse>> logger, IUserService userService)
         {
             _logger = logger;
+            _userService = userService;
         }
 
         public async Task<TResponse> Handle(
@@ -24,19 +27,29 @@ namespace InventorySales.Application.Behaviors
             CancellationToken cancellationToken)
         {
             var requestName = typeof(TRequest).Name;
+            var requestOwner = _userService.UserId ?? "Unknown User";
+            var scopeProps = new Dictionary<string, object>
+            {
+             { "RequestOwner", requestOwner },
+             { "RequestName", requestName }
+            };
+            using (_logger.BeginScope(scopeProps))
+            {
+                _logger.LogInformation(
+                    "Handling {RequestName} Requested By {RequestOwner}: {@Request}",
+                    requestName,
+                    requestOwner,
+                    request);
 
-            _logger.LogInformation(
-                "Handling {RequestName} {@Request}",
-                requestName,
-                request);
+                var response = await next();
 
-            var response = await next();
+                _logger.LogInformation(
+                    "Handled {RequestName} Requested By {RequestOwner}",
+                    requestName,
+                    requestOwner);
 
-            _logger.LogInformation(
-                "Handled {RequestName}",
-                requestName);
-
-            return response;
+                return response;
+            }
         }
     }
 }

@@ -5,7 +5,7 @@ using InventorySales.Domain.ValueObjects;
 
 namespace InventorySales.Domain.Entities
 {
-    public class Sale : BaseEntity, IAuditableEntity
+    public class Sale : BaseEntity
     {
         private readonly List<SaleItem> _items = new();
         public IReadOnlyCollection<SaleItem> Items => _items.AsReadOnly();

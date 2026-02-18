@@ -11,6 +11,9 @@ namespace InventorySales.Domain.Entities
         public Money Price { get; private set; }
         public Quantity Stock { get; private set; }
         public Sku Sku { get; private set; }
+        public Guid? CategoryId { get; set; }
+        public Category Category { get; set; } = new Category();
+
         private readonly List<StockMovement> _stockMovements = new();
         public IReadOnlyCollection<StockMovement> StockMovements => _stockMovements.AsReadOnly(); public string CreatedById { get; set; }
         public string? ModifiedById { get; set; }
@@ -35,10 +38,11 @@ namespace InventorySales.Domain.Entities
         }
         public void UpdatePrice(Money newPrice, string? userId)
         {
+            var oldPrice = this.Price;
             Price = newPrice ?? throw new DomainException("New price is required.");
             ModifiedById = userId;
             ModifiedAt = DateTime.UtcNow;
-            AddDomainEvent(new ProductModifiedEvent(this));
+            AddDomainEvent(new ProductPriceUpdateEvent(this, oldPrice));
         }
 
         public void IncreaseStock(int amount, string userId)

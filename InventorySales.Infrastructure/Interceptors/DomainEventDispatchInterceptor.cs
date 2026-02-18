@@ -1,5 +1,4 @@
 ﻿using InventorySales.Domain.DomainEvents;
-using InventorySales.Domain.Entities.System;
 using MediatR;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using System;
