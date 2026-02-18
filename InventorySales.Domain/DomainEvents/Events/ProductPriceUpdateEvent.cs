@@ -6,12 +6,15 @@ namespace InventorySales.Domain.DomainEvents.Events
 {
     public class ProductPriceUpdateEvent : IDomainEvent
     {
-        public Product Product { get; }
+        public Guid ProductId { get; }
         public Money OldPrice { get; }
-        public ProductPriceUpdateEvent(Product product, Money oldPrice)
+        public Money NewPrice { get; }
+
+        public ProductPriceUpdateEvent(Guid productId, Money oldPrice, Money newPrice)
         {
-            Product = product;
+            ProductId = productId;
             OldPrice = oldPrice;
+            NewPrice = newPrice;
         }
     }
 

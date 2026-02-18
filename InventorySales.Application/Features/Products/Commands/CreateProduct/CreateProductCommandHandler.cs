@@ -39,7 +39,7 @@ namespace InventorySales.Application.Features.Products.Commands.CreateProduct
             }
             var price = Money.Create(request.UnitPrice, "TRY");
 
-            var product = new Product(request.Sku ,request.Name,price, user.ExternalId);
+            var product = new Product(request.Sku ,request.Name,price, user.ExternalId, request.CategoryId);
 
             await _uow.Repository<Product>().AddAsync(product);
 

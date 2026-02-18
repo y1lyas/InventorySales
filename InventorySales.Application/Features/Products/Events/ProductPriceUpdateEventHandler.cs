@@ -18,15 +18,13 @@ namespace InventorySales.Application.Features.Products.Events
         public async Task Handle(ProductPriceUpdateEvent notification, CancellationToken cancellationToken)
         {
             await _cacheService.RemoveByTagAsync("Products");
+
             _logger.LogInformation(
-               "Product price updated for {ProductId} OldPrice: {@OldPrice}, NewPrice: {@NewPrice}",
-               notification.Product.Id,
-               notification.OldPrice,
-               notification.Product.Price
+                "Product price updated for {ProductId} OldPrice: {@OldPrice}, NewPrice: {@NewPrice}",
+                notification.ProductId,
+                notification.OldPrice,
+                notification.NewPrice
             );
-
-
-
         }
     }
 }

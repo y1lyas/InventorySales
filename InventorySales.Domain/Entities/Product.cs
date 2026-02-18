@@ -11,8 +11,8 @@ namespace InventorySales.Domain.Entities
         public Money Price { get; private set; }
         public Quantity Stock { get; private set; }
         public Sku Sku { get; private set; }
-        public Guid? CategoryId { get; set; }
-        public Category Category { get; set; } = new Category();
+        public Guid? CategoryId { get; private set; }
+        public Category Category { get; private set; }
 
         private readonly List<StockMovement> _stockMovements = new();
         public IReadOnlyCollection<StockMovement> StockMovements => _stockMovements.AsReadOnly(); public string CreatedById { get; set; }
@@ -22,7 +22,7 @@ namespace InventorySales.Domain.Entities
         public Product()
         {
         }
-        public Product(string sku, string name, Money unitPrice, string userId)
+        public Product(string sku, string name, Money unitPrice, string userId, Guid? categoryId)
         {
             if (string.IsNullOrWhiteSpace(name))
                 throw new DomainException("Product name cannot be empty.");
@@ -32,8 +32,9 @@ namespace InventorySales.Domain.Entities
             Price = unitPrice ?? throw new DomainException("Price is required.");
             Stock = Quantity.From(0);
             CreatedById = userId;
+            CategoryId = categoryId;
 
-            AddDomainEvent(new ProductCreatedEvent(this));
+            AddDomainEvent(new ProductCreatedEvent(Id, Name, Price));
 
         }
         public void UpdatePrice(Money newPrice, string? userId)
@@ -42,7 +43,7 @@ namespace InventorySales.Domain.Entities
             Price = newPrice ?? throw new DomainException("New price is required.");
             ModifiedById = userId;
             ModifiedAt = DateTime.UtcNow;
-            AddDomainEvent(new ProductPriceUpdateEvent(this, oldPrice));
+            AddDomainEvent(new ProductPriceUpdateEvent(Id, oldPrice, Price));
         }
 
         public void IncreaseStock(int amount, string userId)
@@ -51,7 +52,7 @@ namespace InventorySales.Domain.Entities
 
             _stockMovements.Add(new StockMovement(Id, MovementType.Increase, amount, userId));
 
-            AddDomainEvent(new StockIncreasedEvent(this));
+            AddDomainEvent(new StockIncreasedEvent(Id, amount, userId));
         }
 
         public void DecreaseStock(int amount, string userId)
@@ -60,7 +61,24 @@ namespace InventorySales.Domain.Entities
 
             _stockMovements.Add(new StockMovement(Id, MovementType.Decrease, amount, userId));
 
-            AddDomainEvent(new StockDecreasedEvent(this));
+            AddDomainEvent(new StockDecreasedEvent(Id, amount, userId));
+        }
+
+        public void AssignCategory(Guid categoryId)
+        {
+            if (categoryId == Guid.Empty)
+                throw new DomainException("Category ID cannot be empty.");
+
+            CategoryId = categoryId;
+            AddDomainEvent(new CategoryAssignedEvent(categoryId));
+        }
+        public void UnassignCategory()
+        {
+            if (CategoryId == null) return;
+
+            CategoryId = null;
+            AddDomainEvent(new CategoryUnassignedEvent());
+
         }
     }
 }

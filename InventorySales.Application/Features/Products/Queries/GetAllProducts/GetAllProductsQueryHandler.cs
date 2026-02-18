@@ -1,4 +1,5 @@
-﻿using InventorySales.Application.Abstractions;
+﻿using AutoMapper.QueryableExtensions;
+using InventorySales.Application.Abstractions;
 using InventorySales.Application.Abstractions.Services;
 using InventorySales.Application.Features.Products.Commands.CreateProduct;
 using InventorySales.Application.Features.Products.DTOs;
@@ -17,10 +18,18 @@ namespace InventorySales.Application.Features.Products.Queries.GetProducts
             _uow = uow;
             _mapper = mapper;
         }
-        public async Task<List<ProductDto>> Handle(GetAllProductsQuery request, CancellationToken cancellationToken)
+        public async Task<List<ProductDto>> Handle(GetAllProductsQuery request, CancellationToken ct)
         {
-            var products = await _uow.Repository<Product>().Query().AsNoTracking().ToListAsync(cancellationToken);
-            return _mapper.Map<List<ProductDto>>(products);
+            var query = _uow.Repository<Product>().Query().AsNoTracking();
+
+            if (request.ProductId.HasValue)
+            {
+                query = query.Where(x => x.Id == request.ProductId.Value);
+            }
+
+            return await query
+                .ProjectTo<ProductDto>(_mapper.ConfigurationProvider)
+                .ToListAsync(ct);
         }
     }
 }

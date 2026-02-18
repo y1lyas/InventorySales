@@ -93,6 +93,8 @@ namespace InventorySales.API.Extensions
                   policy.RequireRole("product.update.price"));
                 options.AddPolicy("ProductRead", policy =>
                   policy.RequireRole("product.read"));
+                options.AddPolicy("CategoryCreate", policy =>
+                  policy.RequireRole("category.create"));
 
             });
 

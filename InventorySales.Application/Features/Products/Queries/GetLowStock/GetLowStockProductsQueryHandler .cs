@@ -1,4 +1,5 @@
-﻿using InventorySales.Application.Abstractions;
+﻿using AutoMapper.QueryableExtensions;
+using InventorySales.Application.Abstractions;
 using InventorySales.Application.Features.Products.DTOs;
 using InventorySales.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -21,9 +22,10 @@ namespace InventorySales.Application.Features.Products.Queries.GetLowStock
             var lowStock = await _uow.Repository<Product>().Query()
                 .Where(p => p.Stock.Value < request.Threshold)
                 .AsNoTracking()
+                .ProjectTo<ProductDto>(_mapper.ConfigurationProvider)
                 .ToListAsync();
 
-            return _mapper.Map<List<ProductDto>>(lowStock);
+            return lowStock;
         }
     }
 }

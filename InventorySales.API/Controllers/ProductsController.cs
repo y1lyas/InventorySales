@@ -22,14 +22,14 @@ namespace InventorySales.API.Controllers
         [EnableRateLimiting("read-policy")]
         [Authorize(Policy = "ProductRead")]
         [HttpGet("GetAll")]
-        public async Task<IActionResult> GetAllProducts()
+        public async Task<IActionResult> GetAllProducts(Guid? productId)
         {
-            var result = await _mediator.Send(new GetAllProductsQuery());
+            var result = await _mediator.Send(new GetAllProductsQuery(productId));
             return Ok(result);
         }
         [EnableRateLimiting("write-policy")]
         [Authorize(Policy = "ProductCreate")]
-        [HttpPost]
+        [HttpPost("create")]
         public async Task<IActionResult> CreateProduct([FromBody] CreateProductCommand request)
         {
             var productId = await _mediator.Send(request);
@@ -37,7 +37,7 @@ namespace InventorySales.API.Controllers
         }
         [EnableRateLimiting("write-policy")]
         [Authorize(Policy = "ProductUpdatePrice")]
-        [HttpPut("price")]
+        [HttpPatch("price")]
         public async Task<IActionResult> UpdatePrice([FromBody] UpdateProductPriceCommand request)
         {
             await _mediator.Send(request);

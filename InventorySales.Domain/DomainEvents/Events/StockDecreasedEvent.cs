@@ -9,11 +9,15 @@ namespace InventorySales.Domain.DomainEvents.Events
 {
     public class StockDecreasedEvent : IDomainEvent
     {
-        public Product Product { get; }
+        public Guid ProductId { get; }
+        public int Quantity { get; }
+        public string CreatedById { get; }
 
-        public StockDecreasedEvent(Product product)
+        public StockDecreasedEvent(Guid productId, int quantity, string createdById)
         {
-            Product = product;
+            ProductId = productId;
+            Quantity = quantity;
+            CreatedById = createdById;
         }
     }
 }

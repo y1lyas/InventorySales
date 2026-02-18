@@ -10,7 +10,9 @@ namespace InventorySales.Application.Features.Products.Maps
             CreateMap<Product, ProductDto>()
                 .ForMember(d => d.UnitPrice, o => o.MapFrom(s => s.Price.Amount))
                 .ForMember(d => d.CurrentStock, o => o.MapFrom(s => s.Stock.Value))
-                .ForMember(d => d.CreatedById, o => o.MapFrom(s => s.CreatedById));
+                .ForMember(d => d.CreatedById, o => o.MapFrom(s => s.CreatedById))
+                .ForMember(d => d.CategoryId, o => o.MapFrom(s => s.CategoryId))
+                .ForMember(d => d.CategoryName, o => o.MapFrom(s => s.Category.Name));
         }
     }
 }
