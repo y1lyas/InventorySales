@@ -3,6 +3,7 @@ using InventorySales.Application.Features.Products.Commands.DecreaseStock;
 using InventorySales.Application.Features.Products.Commands.IncreaseStock;
 using InventorySales.Application.Features.Products.Commands.UpdatePrice;
 using InventorySales.Application.Features.Products.Queries.GetLowStock;
+using InventorySales.Application.Features.Products.Queries.GetProductById;
 using InventorySales.Application.Features.Products.Queries.GetProducts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.RateLimiting;
@@ -22,9 +23,17 @@ namespace InventorySales.API.Controllers
         [EnableRateLimiting("read-policy")]
         [Authorize(Policy = "ProductRead")]
         [HttpGet("GetAll")]
-        public async Task<IActionResult> GetAllProducts(Guid? productId)
+        public async Task<IActionResult> GetAllProducts(Guid? categoryId)
         {
-            var result = await _mediator.Send(new GetAllProductsQuery(productId));
+            var result = await _mediator.Send(new GetAllProductsQuery(categoryId));
+            return Ok(result);
+        }
+        [EnableRateLimiting("read-policy")]
+        [Authorize(Policy = "ProductRead")]
+        [HttpGet("GetById")]
+        public async Task<IActionResult> GetProductById(Guid productId)
+        {
+            var result = await _mediator.Send(new GetProductByIdQuery(productId));
             return Ok(result);
         }
         [EnableRateLimiting("write-policy")]

@@ -2,6 +2,7 @@
 using InventorySales.Application.Features.Categories.Commands.CreateCategory;
 using InventorySales.Application.Features.Categories.Commands.UnassignCategory;
 using InventorySales.Application.Features.Categories.Queries.GetAllCategories;
+using InventorySales.Application.Features.Categories.Queries.GetCategoryById;
 using InventorySales.Application.Features.Products.Commands.CreateProduct;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.RateLimiting;
@@ -22,10 +23,22 @@ namespace InventorySales.API.Controllers
         [EnableRateLimiting("read-policy")]
         [Authorize]
         [HttpGet("GetAll")]
-        public async Task<IActionResult> GetAll(Guid? categoryId)
+        public async Task<IActionResult> GetAll(string? categoryName)
         {
-            var categories = await _mediator.Send(new GetAllCategoriesQuery(categoryId));
+            var categories = await _mediator.Send(new GetAllCategoriesQuery(categoryName));
             return Ok(categories);
+        }
+        [EnableRateLimiting("read-policy")]
+        [Authorize]
+        [HttpGet("GetById")]
+        public async Task<IActionResult> GetById(Guid categoryId)
+        {
+            var category = await _mediator.Send(new GetCategoryByIdQuery(categoryId));
+
+            if (category == null)
+                return NotFound();
+
+            return Ok(category);
         }
 
         [EnableRateLimiting("write-policy")]

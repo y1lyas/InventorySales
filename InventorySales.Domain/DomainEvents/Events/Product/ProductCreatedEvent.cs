@@ -2,7 +2,7 @@
 using InventorySales.Domain.ValueObjects;
 
 
-namespace InventorySales.Domain.DomainEvents.Events
+namespace InventorySales.Domain.DomainEvents.Events.Product
 {
     public class ProductCreatedEvent : IDomainEvent
     {

@@ -1,4 +1,5 @@
-﻿using InventorySales.Domain.Entities.Common;
+﻿using InventorySales.Domain.DomainEvents.Events.Category;
+using InventorySales.Domain.Entities.Common;
 using InventorySales.Domain.Exceptions;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,8 @@ namespace InventorySales.Domain.Entities
 
             Name = name;
             Description = description;
+
+            AddDomainEvent(new CategoryCreatedEvent(Id, name));
         }
         public ICollection<Product> Products { get; set; }
     }

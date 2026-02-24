@@ -1,4 +1,6 @@
 ﻿using InventorySales.Domain.DomainEvents.Events;
+using InventorySales.Domain.DomainEvents.Events.Category;
+using InventorySales.Domain.DomainEvents.Events.Product;
 using InventorySales.Domain.Entities.Common;
 using InventorySales.Domain.Exceptions;
 using InventorySales.Domain.ValueObjects;
@@ -70,7 +72,7 @@ namespace InventorySales.Domain.Entities
                 throw new DomainException("Category ID cannot be empty.");
 
             CategoryId = categoryId;
-            AddDomainEvent(new CategoryAssignedEvent(categoryId));
+            AddDomainEvent(new CategoryAssignedEvent());
         }
         public void UnassignCategory()
         {

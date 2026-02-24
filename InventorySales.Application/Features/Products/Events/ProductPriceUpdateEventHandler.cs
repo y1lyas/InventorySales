@@ -1,5 +1,5 @@
 ﻿using InventorySales.Application.Abstractions.RedisCache;
-using InventorySales.Domain.DomainEvents.Events;
+using InventorySales.Domain.DomainEvents.Events.Product;
 using Microsoft.Extensions.Logging;
 
 namespace InventorySales.Application.Features.Products.Events

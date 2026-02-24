@@ -22,9 +22,9 @@ namespace InventorySales.Application.Features.Products.Queries.GetProducts
         {
             var query = _uow.Repository<Product>().Query().AsNoTracking();
 
-            if (request.ProductId.HasValue)
+            if (request.CategoryId.HasValue)
             {
-                query = query.Where(x => x.Id == request.ProductId.Value);
+                query = query.Where(x => x.CategoryId == request.CategoryId.Value);
             }
 
             return await query

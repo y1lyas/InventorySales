@@ -7,8 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace InventorySales.Application.Features.Categories.Queries.GetAllCategories
+namespace InventorySales.Application.Features.Categories.Queries.GetCategoryById
 {
     [Cacheable(60, "Categories")]
-    public record GetAllCategoriesQuery(string? categoryName = null) : IRequest<List<CategoryDto>>, IQuery;
+    public record GetCategoryByIdQuery(Guid CategoryId) : IRequest<CategoryDto>, IQuery;
 }

@@ -1,5 +1,5 @@
 ﻿using InventorySales.Application.Abstractions.RedisCache;
-using InventorySales.Domain.DomainEvents.Events;
+using InventorySales.Domain.DomainEvents.Events.Category;
 using System;
 using System.Collections.Generic;
 using System.Linq;

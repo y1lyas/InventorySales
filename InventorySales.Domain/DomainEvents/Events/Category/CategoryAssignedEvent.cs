@@ -4,14 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace InventorySales.Domain.DomainEvents.Events
+namespace InventorySales.Domain.DomainEvents.Events.Category
 {
     public class CategoryAssignedEvent : IDomainEvent
     {
-        public Guid CategoryId { get; }
-        public CategoryAssignedEvent(Guid categoryId)
+        public CategoryAssignedEvent()
         {
-            CategoryId = categoryId;
         }
     }
 }

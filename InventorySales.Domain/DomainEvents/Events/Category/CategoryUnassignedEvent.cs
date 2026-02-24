@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace InventorySales.Domain.DomainEvents.Events
+namespace InventorySales.Domain.DomainEvents.Events.Category
 {
     public class CategoryUnassignedEvent : IDomainEvent
     {

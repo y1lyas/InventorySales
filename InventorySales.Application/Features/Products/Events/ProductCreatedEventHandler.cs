@@ -1,6 +1,6 @@
 ﻿using InventorySales.Application.Abstractions.RedisCache;
 using InventorySales.Application.Abstractions.Services;
-using InventorySales.Domain.DomainEvents.Events;
+using InventorySales.Domain.DomainEvents.Events.Product;
 using InventorySales.Domain.Entities;
 using Microsoft.Extensions.Logging;
 using System.Threading;

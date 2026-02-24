@@ -26,9 +26,9 @@ namespace InventorySales.Application.Features.Categories.Queries.GetAllCategorie
         {
             var query = _uow.Repository<Category>().Query().AsNoTracking();
 
-            if (request.CategoryId.HasValue)
+            if (!string.IsNullOrWhiteSpace(request.categoryName))
             {
-                query = query.Where(x => x.Id == request.CategoryId.Value);
+                query = query.Where(x => x.Name.ToLower().Contains(request.categoryName));
             }
 
             return await query
