@@ -33,7 +33,7 @@ namespace InventorySales.Domain.ValueObjects
             processed = processed.Trim('-');
 
             if (processed.Length < 3)
-                throw new DomainException("SKU geçerli karakterler içerince çok kısa kaldı.");
+                throw new DomainException("SKU 3 karakterden fazla olmalı.");
 
             Value = processed;
         }

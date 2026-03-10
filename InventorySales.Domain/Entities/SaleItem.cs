@@ -14,7 +14,6 @@ namespace InventorySales.Domain.Entities
         public Quantity Quantity { get; private set; }
         public Money UnitPriceAtSale { get; private set; } 
         public Money LineTotal => Money.Create(Quantity.Value * UnitPriceAtSale.Amount, UnitPriceAtSale.Currency);
-
         private SaleItem() { } 
 
         public SaleItem(Guid productId, int quantity, Money unitPrice)

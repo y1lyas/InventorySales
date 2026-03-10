@@ -1,4 +1,5 @@
 ﻿using InventorySales.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace InventorySales.Infrastructure.ModelBuilders;
 

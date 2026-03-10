@@ -15,18 +15,14 @@ namespace InventorySales.Application.Features.Products.Commands.CreateProduct
     public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand, Guid>
     {
         private readonly IUnitOfWork _uow;
-        private readonly IUserContext _userContext;
 
-        public CreateProductCommandHandler(IUnitOfWork uow, IUserContext userContext)
+        public CreateProductCommandHandler(IUnitOfWork uow )
         {
             _uow = uow;
-            _userContext = userContext;
         }
 
         public async Task<Guid> Handle(CreateProductCommand request, CancellationToken ct)
         {
-            var user = await _userContext.GetCurrentUserAsync(ct);
-
             if (request.CategoryId.HasValue)
             {
                 var categoryExists = await _uow.Repository<Category>().Query()
@@ -39,7 +35,7 @@ namespace InventorySales.Application.Features.Products.Commands.CreateProduct
             }
             var price = Money.Create(request.UnitPrice, "TRY");
 
-            var product = new Product(request.Sku ,request.Name,price, user.ExternalId, request.CategoryId);
+            var product = new Product(request.Sku ,request.Name,price, request.CategoryId);
 
             await _uow.Repository<Product>().AddAsync(product);
 

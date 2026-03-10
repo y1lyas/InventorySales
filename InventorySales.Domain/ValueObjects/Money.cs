@@ -12,8 +12,6 @@ namespace InventorySales.Domain.ValueObjects
         public decimal Amount { get; init; }
         public string Currency { get; init; }
 
-        protected Money() { }
-
         private Money(decimal amount, string currency = "TL")
         {
             if (amount < 0) throw new DomainException("Price cannot be negative.");

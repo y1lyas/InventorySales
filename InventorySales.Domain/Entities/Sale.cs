@@ -10,15 +10,10 @@ namespace InventorySales.Domain.Entities
         private readonly List<SaleItem> _items = new();
         public IReadOnlyCollection<SaleItem> Items => _items.AsReadOnly();
         public Money TotalPrice { get; private set; }
-        public string CreatedById { get; set; }
-        public string? ModifiedById { get; set; }
-        public DateTime? ModifiedAt { get; set; }
-
         protected Sale() { }
-        public Sale(string userId)
+        public Sale(string currency)
         {
-            CreatedById = userId;
-            TotalPrice = Money.Create(0, "TL");
+            TotalPrice = Money.Create(0, currency);
         }
 
         public void AddItem(Product product, int quantity)

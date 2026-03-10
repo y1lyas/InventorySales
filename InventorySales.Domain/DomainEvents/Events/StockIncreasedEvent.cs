@@ -11,13 +11,11 @@ namespace InventorySales.Domain.DomainEvents.Events
     {
         public Guid ProductId { get; }
         public int Quantity { get; }
-        public string CreatedById { get; }
 
-        public StockIncreasedEvent(Guid productId, int quantity, string createdById)
+        public StockIncreasedEvent(Guid productId, int quantity)
         {
             ProductId = productId;
             Quantity = quantity;
-            CreatedById = createdById;
         }
     }
 }

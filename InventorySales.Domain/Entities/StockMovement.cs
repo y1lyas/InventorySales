@@ -15,10 +15,9 @@ namespace InventorySales.Domain.Entities
         public Product Product { get; private set; }
         public int Quantity { get; private set; }
         public MovementType MovementType { get; private set; }
-        public string CreatedById { get; set; }
         protected StockMovement() { }
 
-        public StockMovement(Guid productId, MovementType type, int quantity, string userId)
+        public StockMovement(Guid productId, MovementType type, int quantity ,string userId)
         {
             if (quantity <= 0)
                 throw new DomainException("Quantity must be positive.");

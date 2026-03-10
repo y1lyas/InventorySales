@@ -31,7 +31,8 @@ namespace InventorySales.Infrastructure
                 options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
 
                 options.AddInterceptors(
-                   sp.GetRequiredService<DomainEventDispatchInterceptor>());
+                   sp.GetRequiredService<DomainEventDispatchInterceptor>(),
+                   sp.GetRequiredService<AuditInterceptor>());
             });
 
             services.AddStackExchangeRedisCache(options =>
@@ -41,6 +42,7 @@ namespace InventorySales.Infrastructure
             });
 
             services.AddScoped<DomainEventDispatchInterceptor>();
+            services.AddScoped<AuditInterceptor>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<ICacheService, CacheService>();
             services.AddSingleton<ICacheKeyGenerator, CacheKeyGenerator>();

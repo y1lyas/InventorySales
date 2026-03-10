@@ -1,6 +1,7 @@
 ﻿using InventorySales.Application.Features.Products.Commands.CreateProduct;
 using InventorySales.Application.Features.Products.Commands.DecreaseStock;
 using InventorySales.Application.Features.Products.Commands.IncreaseStock;
+using InventorySales.Application.Features.Products.Commands.RemoveProduct;
 using InventorySales.Application.Features.Products.Commands.UpdatePrice;
 using InventorySales.Application.Features.Products.Queries.GetLowStock;
 using InventorySales.Application.Features.Products.Queries.GetProductById;
@@ -65,7 +66,7 @@ namespace InventorySales.API.Controllers
         [HttpPost("decrease-stock")]
         public async Task<IActionResult> DecreaseStock([FromBody] DecreaseStockCommand request)
         {
-                await _mediator.Send(request);
+            await _mediator.Send(request);
             return Ok();
         }
         [EnableRateLimiting("read-policy")]
@@ -76,6 +77,13 @@ namespace InventorySales.API.Controllers
             var query = new GetLowStockProductsQuery(threshold);
             var result = await _mediator.Send(query);
             return Ok(result);
+        }
+        [Authorize]
+        [HttpDelete("productId")]
+        public async Task<IActionResult> RemoveProduct(Guid productId)
+        {
+            await _mediator.Send(new RemoveProductCommand(productId));
+            return NoContent();
         }
     }
 }

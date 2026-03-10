@@ -2,12 +2,13 @@
 using InventorySales.Domain.DomainEvents.Events.Category;
 using InventorySales.Domain.DomainEvents.Events.Product;
 using InventorySales.Domain.Entities.Common;
+using InventorySales.Domain.Entities.Common.Interfaces;
 using InventorySales.Domain.Exceptions;
 using InventorySales.Domain.ValueObjects;
 
 namespace InventorySales.Domain.Entities
 {
-    public class Product : BaseEntity, IAuditableEntity
+    public class Product : AuditableEntity , ISoftDelete
     {
         public string Name { get; private set; }
         public Money Price { get; private set; }
@@ -17,14 +18,12 @@ namespace InventorySales.Domain.Entities
         public Category Category { get; private set; }
 
         private readonly List<StockMovement> _stockMovements = new();
-        public IReadOnlyCollection<StockMovement> StockMovements => _stockMovements.AsReadOnly(); public string CreatedById { get; set; }
-        public string? ModifiedById { get; set; }
-        public DateTime? ModifiedAt { get; set; }
-
-        public Product()
-        {
-        }
-        public Product(string sku, string name, Money unitPrice, string userId, Guid? categoryId)
+        public IReadOnlyCollection<StockMovement> StockMovements => _stockMovements.AsReadOnly();
+        public bool IsDeleted { get; set; }
+        public DateTime? DeletedAt { get; set; }
+        public string? DeletedById { get; set; }
+        protected Product() { }
+        public Product(string sku, string name, Money unitPrice, Guid? categoryId)
         {
             if (string.IsNullOrWhiteSpace(name))
                 throw new DomainException("Product name cannot be empty.");
@@ -33,18 +32,15 @@ namespace InventorySales.Domain.Entities
             Name = name;
             Price = unitPrice ?? throw new DomainException("Price is required.");
             Stock = Quantity.From(0);
-            CreatedById = userId;
             CategoryId = categoryId;
 
             AddDomainEvent(new ProductCreatedEvent(Id, Name, Price));
 
         }
-        public void UpdatePrice(Money newPrice, string? userId)
+        public void UpdatePrice(Money newPrice )
         {
             var oldPrice = this.Price;
             Price = newPrice ?? throw new DomainException("New price is required.");
-            ModifiedById = userId;
-            ModifiedAt = DateTime.UtcNow;
             AddDomainEvent(new ProductPriceUpdateEvent(Id, oldPrice, Price));
         }
 
@@ -54,7 +50,7 @@ namespace InventorySales.Domain.Entities
 
             _stockMovements.Add(new StockMovement(Id, MovementType.Increase, amount, userId));
 
-            AddDomainEvent(new StockIncreasedEvent(Id, amount, userId));
+            AddDomainEvent(new StockIncreasedEvent(Id, amount));
         }
 
         public void DecreaseStock(int amount, string userId)
@@ -63,7 +59,7 @@ namespace InventorySales.Domain.Entities
 
             _stockMovements.Add(new StockMovement(Id, MovementType.Decrease, amount, userId));
 
-            AddDomainEvent(new StockDecreasedEvent(Id, amount, userId));
+            AddDomainEvent(new StockDecreasedEvent(Id, amount));
         }
 
         public void AssignCategory(Guid categoryId)
@@ -81,6 +77,14 @@ namespace InventorySales.Domain.Entities
             CategoryId = null;
             AddDomainEvent(new CategoryUnassignedEvent());
 
+        }
+        public void SoftDelete(string userId)
+        {
+            if (IsDeleted) return; 
+
+            IsDeleted = true;
+            DeletedAt = DateTime.UtcNow;
+            DeletedById = userId;
         }
     }
 }

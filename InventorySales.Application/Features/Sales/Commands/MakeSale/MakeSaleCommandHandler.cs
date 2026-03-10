@@ -10,19 +10,19 @@ namespace InventorySales.Application.Features.Sales.Commands.MakeSale
     public class MakeSaleCommandHandler : IRequestHandler<MakeSaleCommand, Guid>
     {
         private readonly IUnitOfWork _uow;
-        private readonly IUserContext _userContext;
 
 
-        public MakeSaleCommandHandler(IUnitOfWork uow, IUserContext userContext )
+        public MakeSaleCommandHandler(IUnitOfWork uow)
         {
             _uow = uow;
-            _userContext = userContext;
         }
 
         public async Task<Guid> Handle(MakeSaleCommand request, CancellationToken ct)
         {
-            var user = await _userContext.GetCurrentUserAsync(ct);
-            var sale = new Sale(user.ExternalId);
+            var currency = "TL";
+
+            var sale = new Sale(currency);
+
             foreach (var itemRequest in request.Items)
             {
                 var product = await _uow.Repository<Product>().GetByIdAsync(itemRequest.ProductId)
