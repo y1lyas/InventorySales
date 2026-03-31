@@ -16,6 +16,14 @@ using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options => {
+    options.AddPolicy("AllowAll", builder => {
+        builder.AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader();
+    });
+});
+
 builder.Services
     .AddApplicationServices()
     .AddInfrastructureServices(builder.Configuration)
@@ -55,9 +63,9 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
     return ConnectionMultiplexer.Connect(configuration);
 });
 
-
-
 var app = builder.Build();
+
+
 
 if (app.Environment.IsDevelopment())
 {
@@ -67,6 +75,7 @@ if (app.Environment.IsDevelopment())
         c.OAuthClientId("public-client");
         c.OAuthUsePkce();
     });
+    app.UseCors("AllowAll");
 }
 app.UseSerilogRequestLogging();
 app.UseHttpsRedirection();

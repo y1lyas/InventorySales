@@ -17,7 +17,7 @@ namespace InventorySales.API.Controllers
             _mediator = mediator;
         }
         [EnableRateLimiting("write-policy")]
-        [Authorize(Policy = "SaleCreate")]
+        //[Authorize(Policy = "SaleCreate")]
         [HttpPost("make-sale")]
         public async Task<IActionResult> MakeSale([FromBody] MakeSaleCommand request)
         {
@@ -25,7 +25,7 @@ namespace InventorySales.API.Controllers
             return Ok(new { saleId });
         }
         [EnableRateLimiting("read-policy")]
-        [Authorize(Policy = "SaleReadOwn")]
+        //[Authorize(Policy = "SaleReadOwn")]
         [HttpGet("sales")]
         public async Task<IActionResult> GetUserSales()
         {

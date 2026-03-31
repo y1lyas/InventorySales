@@ -21,7 +21,7 @@ namespace InventorySales.API.Controllers
         }
 
         [EnableRateLimiting("read-policy")]
-        [Authorize]
+        //[Authorize]
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAll(string? categoryName)
         {
@@ -29,7 +29,7 @@ namespace InventorySales.API.Controllers
             return Ok(categories);
         }
         [EnableRateLimiting("read-policy")]
-        [Authorize]
+        //[Authorize]
         [HttpGet("GetById")]
         public async Task<IActionResult> GetById(Guid categoryId)
         {
@@ -42,7 +42,7 @@ namespace InventorySales.API.Controllers
         }
 
         [EnableRateLimiting("write-policy")]
-        [Authorize(Policy = "CategoryCreate")]
+        //[Authorize(Policy = "CategoryCreate")]
         [HttpPost("create")]
         public async Task<IActionResult> CreateCategory([FromBody] CreateCategoryCommand request)
         {
@@ -50,7 +50,7 @@ namespace InventorySales.API.Controllers
             return Ok(categoryId);
         }
         [EnableRateLimiting("write-policy")]
-        [Authorize]
+        //[Authorize]
         [HttpPatch("assign")]
         public async Task<IActionResult> AssignCategory([FromBody] AssignCategoryCommand request)
         {

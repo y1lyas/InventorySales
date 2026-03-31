@@ -14,7 +14,7 @@ namespace InventorySales.Infrastructure.Services
     public class UserService : IUserService
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
-
+        private const string DefaultUserId = "00000000-0000-0000-0000-000000000001";
         public UserService(IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
@@ -24,7 +24,7 @@ namespace InventorySales.Infrastructure.Services
       _httpContextAccessor.HttpContext?
           .User?
           .FindFirst(ClaimTypes.NameIdentifier)?
-          .Value;
+          .Value ?? DefaultUserId;
 
         public string? Email =>
         _httpContextAccessor.HttpContext?
@@ -32,5 +32,6 @@ namespace InventorySales.Infrastructure.Services
              .FindFirst(ClaimTypes.Email)?
              .Value;
 
+        public bool IsAuthenticated => true;
     }
 }
