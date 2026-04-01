@@ -1,11 +1,15 @@
 ﻿using InventorySales.Application.Attributes;
 using InventorySales.Application.Features.Interfaces;
 using InventorySales.Application.Features.Products.DTOs;
+using InventorySales.Application.Features.Products.Paging;
 
 namespace InventorySales.Application.Features.Products.Queries.GetProducts
 {
     [Cacheable(60, "Products")]
-    public sealed record GetAllProductsQuery(Guid? CategoryId) : IRequest<List<ProductDto>>, IQuery;
+    public sealed record GetAllProductsQuery(
+            Guid? CategoryId,
+            int PageNumber = 1,
+            int PageSize = 20) : IRequest<PagedResult<ProductDto>>, IQuery;
 
 
 }
