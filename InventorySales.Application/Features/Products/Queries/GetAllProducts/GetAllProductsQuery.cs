@@ -8,8 +8,9 @@ namespace InventorySales.Application.Features.Products.Queries.GetProducts
     [Cacheable(60, "Products")]
     public sealed record GetAllProductsQuery(
             Guid? CategoryId,
+            string? SearchTerm,
             int PageNumber = 1,
-            int PageSize = 20) : IRequest<PagedResult<ProductDto>>, IQuery;
+            int PageSize = 20 ) : IRequest<PagedResult<ProductDto>>, IQuery;
 
 
 }

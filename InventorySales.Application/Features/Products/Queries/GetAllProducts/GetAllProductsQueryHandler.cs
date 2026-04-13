@@ -7,6 +7,7 @@ using InventorySales.Application.Features.Products.Paging;
 using InventorySales.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System.Linq;
 
 namespace InventorySales.Application.Features.Products.Queries.GetProducts
 {
@@ -26,16 +27,24 @@ namespace InventorySales.Application.Features.Products.Queries.GetProducts
             var pageNumber = Math.Max(1, request.PageNumber);
             var pageSize = Math.Clamp(request.PageSize, 1, 200);
 
-            var query = _uow.Repository<Product>().Query().AsNoTracking();
+            var queryable = _uow.Repository<Product>().Query().AsNoTracking();
 
             if (request.CategoryId.HasValue)
             {
-                query = query.Where(x => x.CategoryId == request.CategoryId.Value);
+                queryable = queryable.Where(x => x.CategoryId == request.CategoryId.Value);
             }
 
-            var totalCount = await query.LongCountAsync(ct);
+            if (!string.IsNullOrWhiteSpace(request.SearchTerm))
+            {
+                var search = request.SearchTerm.Trim().ToLower();
+                queryable = queryable.Where(x =>
+                    x.Name.ToLower().Contains(search) ||
+                    x.Sku.Value.ToLower().Contains(search));
+            }
 
-            var items = await query
+            var totalCount = await queryable.LongCountAsync(ct);
+
+            var items = await queryable
                 .ProjectTo<ProductDto>(_mapper.ConfigurationProvider)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
