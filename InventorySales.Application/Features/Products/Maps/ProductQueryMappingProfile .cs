@@ -15,7 +15,8 @@ namespace InventorySales.Application.Features.Products.Maps
                 .ForMember(d => d.CategoryName, o => o.MapFrom(s => s.Category.Name))
                 .ForMember(d => d.SKUnit, o => o.MapFrom(s => s.Sku.Value))
                 .ForMember(d => d.Currency, o => o.MapFrom(s => s.Price.Currency))
-                .ForMember(d => d.CreatedAt, o => o.MapFrom(s => s.CreatedDate));
+                .ForMember(d => d.CreatedAt, o => o.MapFrom(s => s.CreatedDate))
+                .ForMember(d => d.DeletedAt, o => o.MapFrom(s => s.DeletedAt));
         }
     }
 }

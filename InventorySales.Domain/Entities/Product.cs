@@ -85,6 +85,7 @@ namespace InventorySales.Domain.Entities
             IsDeleted = true;
             DeletedAt = DateTime.UtcNow;
             DeletedById = userId;
+            AddDomainEvent(new ProductRemovedEvent(Id));
         }
     }
 }

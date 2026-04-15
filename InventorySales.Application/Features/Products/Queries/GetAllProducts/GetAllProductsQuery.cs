@@ -9,6 +9,7 @@ namespace InventorySales.Application.Features.Products.Queries.GetProducts
     public sealed record GetAllProductsQuery(
             Guid? CategoryId,
             string? SearchTerm,
+            bool? IsDeleted,
             int PageNumber = 1,
             int PageSize = 20 ) : IRequest<PagedResult<ProductDto>>, IQuery;
 

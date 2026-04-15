@@ -14,5 +14,6 @@ namespace InventorySales.Application.Features.Products.DTOs
         public string? CreatedById { get; set; }
         public string? SKUnit { get; set; }
         public DateTime CreatedAt { get; set; }
+        public DateTime? DeletedAt { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using InventorySales.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Emit;
 
 namespace InventorySales.Infrastructure.ModelBuilders;
 
@@ -14,7 +15,9 @@ public class ProductModelBuilder : IEntityTypeConfiguration<Product>
                .HasForeignKey(p => p.CategoryId);
 
         builder.Property(p => p.RowVersion)
-           .IsRowVersion(); 
+           .IsRowVersion();
+
+        builder.HasQueryFilter(p => !p.IsDeleted);
 
         builder.OwnsOne(p => p.Price, p => {
             p.Property(m => m.Amount).HasColumnName("Price_Amount");

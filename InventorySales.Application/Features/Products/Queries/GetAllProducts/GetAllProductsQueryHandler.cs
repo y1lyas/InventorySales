@@ -29,6 +29,11 @@ namespace InventorySales.Application.Features.Products.Queries.GetProducts
 
             var queryable = _uow.Repository<Product>().Query().AsNoTracking();
 
+            if (request.IsDeleted.GetValueOrDefault())
+            {
+                queryable = queryable.IgnoreQueryFilters().Where(p => p.IsDeleted)
+            .OrderByDescending(p => p.DeletedAt);
+            }
             if (request.CategoryId.HasValue)
             {
                 queryable = queryable.Where(x => x.CategoryId == request.CategoryId.Value);

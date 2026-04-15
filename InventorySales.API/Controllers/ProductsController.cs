@@ -24,9 +24,9 @@ namespace InventorySales.API.Controllers
         [EnableRateLimiting("read-policy")]
         //[Authorize(Policy = "ProductRead")]
         [HttpGet("GetAll")]
-        public async Task<IActionResult> GetAllProducts(Guid? categoryId, string? searchTerm, int pageNumber = 1, int pageSize = 20)
+        public async Task<IActionResult> GetAllProducts(Guid? categoryId, string? searchTerm, bool? IsDeleted, int pageNumber = 1, int pageSize = 20)
         {
-            var result = await _mediator.Send(new GetAllProductsQuery(categoryId, searchTerm, pageNumber, pageSize));
+            var result = await _mediator.Send(new GetAllProductsQuery(categoryId, searchTerm,IsDeleted,pageNumber, pageSize));
             return Ok(result);
         }
         [EnableRateLimiting("read-policy")]
@@ -79,7 +79,7 @@ namespace InventorySales.API.Controllers
             return Ok(result);
         }
         //[Authorize]
-        [HttpDelete("productId")]
+        [HttpDelete("delete/{productId}")]
         public async Task<IActionResult> RemoveProduct(Guid productId)
         {
             await _mediator.Send(new RemoveProductCommand(productId));
