@@ -49,23 +49,7 @@ builder.Host.UseSerilog((context, services, configuration) =>
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.Configure<CacheSettings>(
-    builder.Configuration.GetSection("CacheSettings"));
-
-builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
-{
-    var settings = sp
-      .GetRequiredService<IOptions<CacheSettings>>()
-      .Value;
-
-    var configuration = ConfigurationOptions.Parse(settings.ConnectionString);
-    configuration.AbortOnConnectFail = false;
-    return ConnectionMultiplexer.Connect(configuration);
-});
-
 var app = builder.Build();
-
-
 
 if (app.Environment.IsDevelopment())
 {

@@ -1,23 +1,15 @@
 ﻿using InventorySales.Application.Abstractions;
 using InventorySales.Application.Abstractions.RedisCache;
 using InventorySales.Application.Abstractions.Services;
-using InventorySales.Application.Behaviors;
-using InventorySales.Application.Common;
-using InventorySales.Infrastructure.Behaviours;
 using InventorySales.Infrastructure.Interceptors;
 using InventorySales.Infrastructure.Persistence;
 using InventorySales.Infrastructure.RedisCache;
 using InventorySales.Infrastructure.Services;
 using InventorySales.Infrastructure.Services.CorrelationContext;
-using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using StackExchange.Redis;
+
 
 namespace InventorySales.Infrastructure
 {
@@ -26,19 +18,12 @@ namespace InventorySales.Infrastructure
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
         {
 
-            services.AddDbContext<InventoryDbContext>((sp, options) =>
+            services.AddSingleton<IConnectionMultiplexer>(sp =>
             {
-                options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
-
-                options.AddInterceptors(
-                   sp.GetRequiredService<DomainEventDispatchInterceptor>(),
-                   sp.GetRequiredService<AuditInterceptor>());
-            });
-
-            services.AddStackExchangeRedisCache(options =>
-            {
-                options.Configuration = configuration["CacheSettings:ConnectionString"];
-                options.InstanceName = configuration["CacheSettings:InstanceName"];
+                var settings = configuration.GetSection("CacheSettings").Get<CacheSettings>();
+                var opts = ConfigurationOptions.Parse(settings.ConnectionString);
+                opts.AbortOnConnectFail = false;
+                return ConnectionMultiplexer.Connect(opts);
             });
 
             services.AddScoped<DomainEventDispatchInterceptor>();
@@ -50,6 +35,15 @@ namespace InventorySales.Infrastructure
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IUserContext, UserContext>();
             services.AddScoped<ICorrelationContext, HttpCorrelationContext>();
+
+            services.AddDbContext<InventoryDbContext>((sp, options) =>
+            {
+                options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
+
+                options.AddInterceptors(
+                   sp.GetRequiredService<DomainEventDispatchInterceptor>(),
+                   sp.GetRequiredService<AuditInterceptor>());
+            });
 
             return services;
         }
