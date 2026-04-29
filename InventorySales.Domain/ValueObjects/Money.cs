@@ -12,14 +12,14 @@ namespace InventorySales.Domain.ValueObjects
         public decimal Amount { get; init; }
         public string Currency { get; init; }
 
-        private Money(decimal amount, string currency = "TL")
+        private Money(decimal amount, string currency = "TRY")
         {
             if (amount < 0) throw new DomainException("Price cannot be negative.");
             Amount = amount;
             Currency = currency;
         }
 
-        public static Money Create(decimal amount, string currency = "TL") => new(amount, currency);
+        public static Money Create(decimal amount, string currency) => new(amount, currency);
 
         // Operatör aşırı yükleme ile kolay kullanım
         public static Money operator *(int quantity, Money money)
