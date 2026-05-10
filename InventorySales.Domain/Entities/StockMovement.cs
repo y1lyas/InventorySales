@@ -6,8 +6,8 @@ namespace InventorySales.Domain.Entities
 {
     public enum MovementType
     {
-        Increase = 0,
-        Decrease = 1
+        Increase = 1,
+        Decrease = 2
     }
     public class StockMovement : BaseEntity
     {

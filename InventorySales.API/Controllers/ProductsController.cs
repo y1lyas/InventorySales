@@ -3,9 +3,12 @@ using InventorySales.Application.Features.Products.Commands.DecreaseStock;
 using InventorySales.Application.Features.Products.Commands.IncreaseStock;
 using InventorySales.Application.Features.Products.Commands.RemoveProduct;
 using InventorySales.Application.Features.Products.Commands.UpdatePrice;
+using InventorySales.Application.Features.Products.Queries.GetAllStockMovements;
 using InventorySales.Application.Features.Products.Queries.GetLowStock;
 using InventorySales.Application.Features.Products.Queries.GetProductById;
 using InventorySales.Application.Features.Products.Queries.GetProducts;
+using InventorySales.Application.Features.Products.Queries.GetStockMovement;
+using InventorySales.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.RateLimiting;
 
@@ -24,17 +27,17 @@ namespace InventorySales.API.Controllers
         [EnableRateLimiting("read-policy")]
         //[Authorize(Policy = "ProductRead")]
         [HttpGet("GetAll")]
-        public async Task<IActionResult> GetAllProducts(Guid? categoryId, string? searchTerm, bool? IsDeleted, int pageNumber = 1, int pageSize = 20)
+        public async Task<IActionResult> GetAllProducts([FromQuery] GetAllProductsQuery query)
         {
-            var result = await _mediator.Send(new GetAllProductsQuery(categoryId, searchTerm,IsDeleted,pageNumber, pageSize));
+            var result = await _mediator.Send(query);
             return Ok(result);
         }
         [EnableRateLimiting("read-policy")]
         //[Authorize(Policy = "ProductRead")]
         [HttpGet("GetById")]
-        public async Task<IActionResult> GetProductById(Guid productId)
+        public async Task<IActionResult> GetProductById([FromQuery] GetProductByIdQuery query)
         {
-            var result = await _mediator.Send(new GetProductByIdQuery(productId));
+            var result = await _mediator.Send(query);
             return Ok(result);
         }
         [EnableRateLimiting("write-policy")]
@@ -72,18 +75,30 @@ namespace InventorySales.API.Controllers
         [EnableRateLimiting("read-policy")]
         //[Authorize(Policy = "StockReadLow")]
         [HttpGet("low-stock")]
-        public async Task<IActionResult> GetLowStock([FromQuery] int threshold = 5)
+        public async Task<IActionResult> GetLowStock([FromQuery] GetLowStockProductsQuery query)
         {
-            var query = new GetLowStockProductsQuery(threshold);
             var result = await _mediator.Send(query);
             return Ok(result);
         }
         //[Authorize]
-        [HttpDelete("delete/{productId}")]
-        public async Task<IActionResult> RemoveProduct(Guid productId)
+        [HttpDelete("delete")]
+        public async Task<IActionResult> RemoveProduct([FromQuery] RemoveProductCommand query)
         {
-            await _mediator.Send(new RemoveProductCommand(productId));
+            await _mediator.Send(query);
             return NoContent();
+        }
+        [HttpGet("stock-movements")]
+        public async Task<IActionResult> GetStockMovements([FromQuery] GetStockMovementsQuery query)
+        {
+            var result = await _mediator.Send(query);
+
+            return Ok(result);
+        }
+        [HttpGet("stock-movements-all")]
+        public async Task<IActionResult> GetAllStockMovements([FromQuery] GetAllStockMovementsQuery query)
+        {
+            var result = await _mediator.Send(query);
+            return Ok(result);
         }
     }
 }

@@ -2,6 +2,7 @@
 using InventorySales.Application.Abstractions.RedisCache;
 using InventorySales.Application.Abstractions.Services;
 using InventorySales.Application.Exceptions;
+using InventorySales.Application.Features.Products.DTOs;
 using InventorySales.Domain.Entities;
 using InventorySales.Domain.Exceptions;
 using InventorySales.Domain.ValueObjects;
@@ -12,16 +13,18 @@ using System.Threading;
 
 namespace InventorySales.Application.Features.Products.Commands.CreateProduct
 {
-    public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand, Guid>
+    public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand, ProductDto>
     {
         private readonly IUnitOfWork _uow;
+        private readonly IMapper _mapper;
 
-        public CreateProductCommandHandler(IUnitOfWork uow )
+        public CreateProductCommandHandler(IUnitOfWork uow, IMapper mapper)
         {
             _uow = uow;
+            _mapper = mapper;
         }
 
-        public async Task<Guid> Handle(CreateProductCommand request, CancellationToken ct)
+        public async Task<ProductDto> Handle(CreateProductCommand request, CancellationToken ct)
         {
             if (request.CategoryId.HasValue)
             {
@@ -39,7 +42,7 @@ namespace InventorySales.Application.Features.Products.Commands.CreateProduct
 
             await _uow.Repository<Product>().AddAsync(product);
 
-            return product.Id;
+            return _mapper.Map<ProductDto>(product);
         }
 
     }

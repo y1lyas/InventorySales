@@ -19,7 +19,7 @@ namespace InventorySales.Domain.ValueObjects
             Currency = currency;
         }
 
-        public static Money Create(decimal amount, string currency) => new(amount, currency);
+        public static Money Create(decimal amount, string currency = "TRY") => new(amount, currency);
 
         // Operatör aşırı yükleme ile kolay kullanım
         public static Money operator *(int quantity, Money money)

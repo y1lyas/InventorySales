@@ -29,7 +29,7 @@ namespace InventorySales.Domain.Entities
         private void CalculateTotalPrice()
         {
             var totalAmount = _items.Sum(x => x.LineTotal.Amount);
-            var currency = _items.FirstOrDefault()?.UnitPriceAtSale.Currency ?? "TL";
+            var currency = _items.FirstOrDefault()?.UnitPriceAtSale.Currency ?? "TRY";
             TotalPrice = Money.Create(totalAmount, currency);
         }
     }

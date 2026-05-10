@@ -19,7 +19,7 @@ namespace InventorySales.Application.Features.Sales.Commands.MakeSale
 
         public async Task<Guid> Handle(MakeSaleCommand request, CancellationToken ct)
         {
-            var currency = "TL";
+            var currency = "TRY";
 
             var sale = new Sale(currency);
 
