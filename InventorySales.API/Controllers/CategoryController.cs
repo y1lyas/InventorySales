@@ -23,17 +23,17 @@ namespace InventorySales.API.Controllers
         [EnableRateLimiting("read-policy")]
         //[Authorize]
         [HttpGet("GetAll")]
-        public async Task<IActionResult> GetAll(string? categoryName)
+        public async Task<IActionResult> GetAll([FromQuery] GetAllCategoriesQuery request)
         {
-            var categories = await _mediator.Send(new GetAllCategoriesQuery(categoryName));
+            var categories = await _mediator.Send(request);
             return Ok(categories);
         }
         [EnableRateLimiting("read-policy")]
         //[Authorize]
         [HttpGet("GetById")]
-        public async Task<IActionResult> GetById(Guid categoryId)
+        public async Task<IActionResult> GetById([FromQuery] GetCategoryByIdQuery request)
         {
-            var category = await _mediator.Send(new GetCategoryByIdQuery(categoryId));
+            var category = await _mediator.Send(request);
 
             if (category == null)
                 return NotFound();

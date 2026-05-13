@@ -12,15 +12,17 @@ namespace InventorySales.Domain.Entities
     public class Category : BaseEntity
     {
         public string Name { get; set; }
-        public string Description { get; set; }
+        public string? Description { get; set; }
         protected Category() { }
-        public Category(string name, string description)
+        public Category(string name, string? description)
         {
             if (string.IsNullOrWhiteSpace(name))
                 throw new DomainException("Category name cannot be empty.");
 
-            Name = name;
-            Description = description;
+            Name = name.Trim();
+            Description = string.IsNullOrWhiteSpace(description)
+                ? null
+                : description.Trim();
 
             AddDomainEvent(new CategoryCreatedEvent(Id, name));
         }

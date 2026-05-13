@@ -21,6 +21,8 @@ namespace InventorySales.Application.Features.Products.Events
         public async Task Handle(StockIncreasedEvent notification, CancellationToken ct)
         {
             await _cacheService.RemoveByTagAsync("Products");
+            await _cacheService.RemoveByTagAsync("StockMovements");
+
 
         }
     }

@@ -68,14 +68,14 @@ namespace InventorySales.Domain.Entities
                 throw new DomainException("Category ID cannot be empty.");
 
             CategoryId = categoryId;
-            AddDomainEvent(new CategoryAssignedEvent());
+            AddDomainEvent(new CategoryAssignedEvent(Id, categoryId));
         }
         public void UnassignCategory()
         {
             if (CategoryId == null) return;
 
             CategoryId = null;
-            AddDomainEvent(new CategoryUnassignedEvent());
+            AddDomainEvent(new CategoryUnassignedEvent(Id));
 
         }
         public void SoftDelete(string userId)

@@ -1,4 +1,5 @@
 ﻿using InventorySales.Application.Abstractions;
+using InventorySales.Application.Features.Categories.DTOs;
 using InventorySales.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -8,18 +9,20 @@ using System.Threading.Tasks;
 
 namespace InventorySales.Application.Features.Categories.Commands.CreateCategory
 {
-    public class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryCommand, Guid>
+    public class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryCommand, CategoryDto>
     {
         private readonly IUnitOfWork _uow;
-        public CreateCategoryCommandHandler(IUnitOfWork uow)
+        private readonly IMapper _mapper;
+        public CreateCategoryCommandHandler(IUnitOfWork uow, IMapper mapper)
         {
             _uow = uow;
+            _mapper = mapper;
         }
-        public async Task<Guid> Handle(CreateCategoryCommand request, CancellationToken ct)
+        public async Task<CategoryDto> Handle(CreateCategoryCommand request, CancellationToken ct)
         {
             var category = new Category(request.Name, request.Description);
             await _uow.Repository<Category>().AddAsync(category);
-            return category.Id;
+            return _mapper.Map<CategoryDto>(category);
         }
     }
 }

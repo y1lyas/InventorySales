@@ -19,10 +19,12 @@ namespace InventorySales.Application.Features.Categories.Commands.CreateCategory
             RuleFor(x => x.Name)
              .NotEmpty().WithMessage("Kategori adı boş olamaz")
              .MinimumLength(1).WithMessage("Kategori adı en az 1 karakter olmalı")
-             .MustAsync(BeUniqueName).WithMessage("Bu kategori adı zaten kullanımda"); 
+             .MustAsync(BeUniqueName).WithMessage("Bu kategori adı zaten kullanımda");
 
             RuleFor(x => x.Description)
-                .NotEmpty().WithMessage("Kategori açıklaması boş olamaz");
+            .MaximumLength(300)
+            .Must(description => string.IsNullOrWhiteSpace(description) || description.Trim().Length >= 2)
+            .WithMessage("Description must be at least 3 characters long.");
         }
 
         private async Task<bool> BeUniqueName(string name, CancellationToken ct)

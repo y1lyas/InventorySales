@@ -51,8 +51,8 @@ namespace InventorySales.Application.Features.Products.Queries.GetAllStockMoveme
             }
 
             queryable = queryable.OrderByDescending(x => x.CreatedDate);
-
             var totalCount = await queryable.LongCountAsync(ct);
+
 
             var items = await queryable
                 .Skip((pageNumber - 1) * pageSize)

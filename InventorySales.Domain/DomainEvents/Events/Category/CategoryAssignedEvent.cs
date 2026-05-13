@@ -8,8 +8,14 @@ namespace InventorySales.Domain.DomainEvents.Events.Category
 {
     public class CategoryAssignedEvent : IDomainEvent
     {
-        public CategoryAssignedEvent()
+        public Guid ProductId { get; }
+        public Guid CategoryId { get;}
+
+
+        public CategoryAssignedEvent(Guid productId, Guid categoryId)
         {
+            ProductId = productId;
+            CategoryId = categoryId;
         }
     }
 }
