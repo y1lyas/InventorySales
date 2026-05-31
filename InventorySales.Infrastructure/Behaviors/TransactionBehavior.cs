@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using InventorySales.Application.Abstractions.RedisCache;
-using InventorySales.Application.Features.Interfaces;
+using InventorySales.Application.Features;
 using InventorySales.Infrastructure.Exceptions;
 using InventorySales.Infrastructure.Persistence;
 using MediatR;

@@ -1,12 +1,6 @@
 ﻿using InventorySales.Application.Attributes;
+using InventorySales.Application.Common.Pagination;
 using InventorySales.Application.Features.Categories.DTOs;
-using InventorySales.Application.Features.Interfaces;
-using InventorySales.Application.Features.Products.Paging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace InventorySales.Application.Features.Categories.Queries.GetAllCategories
 {

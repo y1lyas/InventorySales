@@ -1,14 +1,9 @@
-﻿using AutoMapper.QueryableExtensions;
-using InventorySales.Application.Abstractions;
+﻿using InventorySales.Application.Abstractions;
+using InventorySales.Application.Abstractions.Services;
+using InventorySales.Application.Common.Pagination;
 using InventorySales.Application.Features.Products.DTOs;
-using InventorySales.Application.Features.Products.Paging;
 using InventorySales.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace InventorySales.Application.Features.Products.Queries.GetAllStockMovements
 {
@@ -16,59 +11,76 @@ namespace InventorySales.Application.Features.Products.Queries.GetAllStockMoveme
     {
         private readonly IUnitOfWork _uow;
         private readonly IMapper _mapper;
-        public GetAllStockMovementsQueryHandler(IMapper mapper, IUnitOfWork uow)
+        private readonly IPaginationService _paginationService;
+
+        public GetAllStockMovementsQueryHandler(IMapper mapper, IUnitOfWork uow, IPaginationService paginationService)
         {
             _mapper = mapper;
             _uow = uow;
+            _paginationService = paginationService;
         }
 
         public async Task<PagedResult<StockMovementDto>> Handle(GetAllStockMovementsQuery request, CancellationToken ct)
         {
-            var pageNumber = Math.Max(1, request.PageNumber);
-            var pageSize = Math.Clamp(request.PageSize, 1, 200);
-            var queryable = _uow.Repository<StockMovement>()
-                .Query()
-                .AsNoTracking();
+            var baseQuery = _uow.Repository<StockMovement>()
+                 .Query()
+                 .AsNoTracking()
+                .Where(x => x.Product != null);
 
             if (request.ProductId.HasValue)
             {
-                queryable = queryable.Where(x => x.ProductId == request.ProductId.Value);
+                baseQuery = baseQuery.Where(x => x.ProductId == request.ProductId.Value);
             }
 
             if (request.MovementType.HasValue)
             {
-                queryable = queryable.Where(x =>
+                baseQuery = baseQuery.Where(x =>
                     x.MovementType == request.MovementType.Value);
             }
+            if (request.MovementReason.HasValue)
+            {
+                baseQuery = baseQuery.Where(x =>
+                    x.Reason == request.MovementReason.Value);
+            }
+            if (request.StartDate.HasValue)
+            {
+                baseQuery = baseQuery.Where(x =>
+                    x.CreatedDate >= request.StartDate.Value);
+            }
+            if (request.EndDate.HasValue)
+            {
+                var endDate = request.EndDate.Value.Date.AddDays(1);
 
+                baseQuery = baseQuery.Where(x =>
+                    x.CreatedDate < endDate);
+            }
+            if (request.MinQuantity.HasValue)
+            {
+                baseQuery = baseQuery.Where(x =>
+                    x.Quantity >= request.MinQuantity.Value);
+            }
+            if (request.MaxQuantity.HasValue)
+            {
+                baseQuery = baseQuery.Where(x =>
+                    x.Quantity <= request.MaxQuantity.Value);
+            }
             if (!string.IsNullOrWhiteSpace(request.SearchTerm))
             {
                 var search = request.SearchTerm.Trim().ToLower();
 
-                queryable = queryable.Where(x =>
+                baseQuery = baseQuery.Where(x =>
                     x.Product.Name.ToLower().Contains(search) ||
                     x.Product.Sku.Value.ToLower().Contains(search));
             }
 
-            queryable = queryable.OrderByDescending(x => x.CreatedDate);
-            var totalCount = await queryable.LongCountAsync(ct);
-
-
-            var items = await queryable
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
-                .ProjectTo<StockMovementDto>(_mapper.ConfigurationProvider)
-                .ToListAsync(ct);
-
-            var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
-
-            return new PagedResult<StockMovementDto>(
-                items,
-                pageNumber,
-                pageSize,
-                totalCount,
-                totalPages
-            );
+            return await _paginationService
+           .CreateAsync<StockMovement, StockMovementDto>(
+               baseQuery,
+               q => q.OrderByDescending(x => x.CreatedDate),
+               request.PageNumber,
+               request.PageSize,
+               _mapper.ConfigurationProvider,
+               ct);
         }
     }
 }

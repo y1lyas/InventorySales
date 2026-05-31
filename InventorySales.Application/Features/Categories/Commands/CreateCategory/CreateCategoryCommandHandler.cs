@@ -1,11 +1,6 @@
 ﻿using InventorySales.Application.Abstractions;
 using InventorySales.Application.Features.Categories.DTOs;
 using InventorySales.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace InventorySales.Application.Features.Categories.Commands.CreateCategory
 {

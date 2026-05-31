@@ -1,11 +1,6 @@
 ﻿using InventorySales.Application.Abstractions;
-using InventorySales.Application.Exceptions;
+using InventorySales.Application.Common.Exceptions;
 using InventorySales.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace InventorySales.Application.Features.Categories.Commands.AssignCategory
 {
@@ -31,7 +26,7 @@ namespace InventorySales.Application.Features.Categories.Commands.AssignCategory
                 throw new CategoryNotFoundException(request.CategoryId);
             }
             product.AssignCategory(category.Id);
-            
+
             return Unit.Value;
         }
 

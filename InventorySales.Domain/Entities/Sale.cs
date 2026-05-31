@@ -1,4 +1,5 @@
-﻿using InventorySales.Domain.Entities.Common;
+﻿using InventorySales.Domain.DomainEvents.Events.Sale;
+using InventorySales.Domain.Entities.Common;
 using InventorySales.Domain.Exceptions;
 using InventorySales.Domain.ValueObjects;
 
@@ -18,9 +19,7 @@ namespace InventorySales.Domain.Entities
 
         public void AddItem(Product product, int quantity)
         {
-            product.DecreaseStock(quantity, CreatedById);
-
-            var item = new SaleItem(product.Id, quantity, product.Price);
+            var item = new SaleItem(product.Id, product.Name, quantity, product.Price);
             _items.Add(item);
 
             CalculateTotalPrice();
@@ -31,6 +30,12 @@ namespace InventorySales.Domain.Entities
             var totalAmount = _items.Sum(x => x.LineTotal.Amount);
             var currency = _items.FirstOrDefault()?.UnitPriceAtSale.Currency ?? "TRY";
             TotalPrice = Money.Create(totalAmount, currency);
+        }
+
+        public void Complete()
+        {
+            AddDomainEvent(
+                new SaleCreatedEvent(Id));
         }
     }
 }

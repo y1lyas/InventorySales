@@ -1,13 +1,8 @@
 ﻿using InventorySales.Application.Attributes;
-using InventorySales.Application.Features.Interfaces;
+using InventorySales.Application.Common.Pagination;
 using InventorySales.Application.Features.Products.DTOs;
-using InventorySales.Application.Features.Products.Paging;
 using InventorySales.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using InventorySales.Domain.Enums;
 
 namespace InventorySales.Application.Features.Products.Queries.GetAllStockMovements
 {
@@ -16,6 +11,11 @@ namespace InventorySales.Application.Features.Products.Queries.GetAllStockMoveme
  Guid? ProductId,
  string? SearchTerm,
  MovementType? MovementType,
+ MovementReason? MovementReason,
+ DateTime? StartDate,
+ DateTime? EndDate,
+  int? MinQuantity,
+ int? MaxQuantity,
  int PageNumber = 1,
  int PageSize = 20) : IRequest<PagedResult<StockMovementDto>>, IQuery;
 }

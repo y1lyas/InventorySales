@@ -1,6 +1,4 @@
-﻿using InventorySales.Domain.Entities;
-
-namespace InventorySales.Application.Features.Products.DTOs
+﻿namespace InventorySales.Application.Features.Products.DTOs
 {
     public class ProductDto
     {

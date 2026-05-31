@@ -20,7 +20,7 @@ namespace InventorySales.API.Controllers
             _mediator = mediator;
         }
 
-        [EnableRateLimiting("read-policy")]
+        //[EnableRateLimiting("read-policy")]
         //[Authorize]
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAll([FromQuery] GetAllCategoriesQuery request)
@@ -28,12 +28,12 @@ namespace InventorySales.API.Controllers
             var categories = await _mediator.Send(request);
             return Ok(categories);
         }
-        [EnableRateLimiting("read-policy")]
+        //[EnableRateLimiting("read-policy")]
         //[Authorize]
-        [HttpGet("GetById")]
-        public async Task<IActionResult> GetById([FromQuery] GetCategoryByIdQuery request)
+        [HttpGet("GetById/{id}")]
+        public async Task<IActionResult> GetById([FromRoute] Guid id)
         {
-            var category = await _mediator.Send(request);
+            var category = await _mediator.Send(new GetCategoryByIdQuery(id));
 
             if (category == null)
                 return NotFound();
@@ -41,7 +41,7 @@ namespace InventorySales.API.Controllers
             return Ok(category);
         }
 
-        [EnableRateLimiting("write-policy")]
+        //[EnableRateLimiting("write-policy")]
         //[Authorize(Policy = "CategoryCreate")]
         [HttpPost("create")]
         public async Task<IActionResult> CreateCategory([FromBody] CreateCategoryCommand request)
@@ -49,7 +49,7 @@ namespace InventorySales.API.Controllers
             var categoryId = await _mediator.Send(request);
             return Ok(categoryId);
         }
-        [EnableRateLimiting("write-policy")]
+        //[EnableRateLimiting("write-policy")]
         //[Authorize]
         [HttpPatch("assign")]
         public async Task<IActionResult> AssignCategory([FromBody] AssignCategoryCommand request)

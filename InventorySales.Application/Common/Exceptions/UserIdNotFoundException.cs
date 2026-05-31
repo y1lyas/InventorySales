@@ -1,6 +1,6 @@
 ﻿using InventorySales.Application.Exceptions.Base;
 
-namespace InventorySales.Application.Exceptions
+namespace InventorySales.Application.Common.Exceptions
 {
     public class UserIdNotFoundException : BaseException
     {

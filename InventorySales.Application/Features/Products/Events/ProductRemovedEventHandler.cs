@@ -1,11 +1,6 @@
 ﻿using InventorySales.Application.Abstractions.RedisCache;
 using InventorySales.Domain.DomainEvents.Events.Product;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace InventorySales.Application.Features.Products.Events
 {
@@ -22,6 +17,8 @@ namespace InventorySales.Application.Features.Products.Events
         public async Task Handle(ProductRemovedEvent notification, CancellationToken ct)
         {
             await _cacheService.RemoveByTagAsync("Products");
+            await _cacheService.RemoveByTagAsync("StockMovements");
+
 
             _logger.LogInformation(
                "Product with ID {ProductId} removed.",

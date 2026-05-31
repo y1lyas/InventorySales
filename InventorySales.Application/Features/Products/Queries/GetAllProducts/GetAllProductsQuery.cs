@@ -1,7 +1,6 @@
 ﻿using InventorySales.Application.Attributes;
-using InventorySales.Application.Features.Interfaces;
+using InventorySales.Application.Common.Pagination;
 using InventorySales.Application.Features.Products.DTOs;
-using InventorySales.Application.Features.Products.Paging;
 
 namespace InventorySales.Application.Features.Products.Queries.GetProducts
 {
@@ -10,8 +9,14 @@ namespace InventorySales.Application.Features.Products.Queries.GetProducts
             Guid? CategoryId,
             string? SearchTerm,
             bool? IsDeleted,
+            int? MinStock,
+            int? MaxStock,
+            decimal? MinPrice,
+            decimal? MaxPrice,
+            DateTime? StartDate,
+            DateTime? EndDate,
             int PageNumber = 1,
-            int PageSize = 20 ) : IRequest<PagedResult<ProductDto>>, IQuery;
+            int PageSize = 20) : IRequest<PagedResult<ProductDto>>, IQuery;
 
 
 }

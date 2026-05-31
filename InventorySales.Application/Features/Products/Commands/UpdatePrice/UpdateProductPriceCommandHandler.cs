@@ -1,9 +1,7 @@
 ﻿using InventorySales.Application.Abstractions;
-using InventorySales.Application.Abstractions.Services;
-using InventorySales.Application.Exceptions;
+using InventorySales.Application.Common.Exceptions;
 using InventorySales.Domain.Entities;
 using InventorySales.Domain.ValueObjects;
-using Microsoft.Extensions.Logging;
 
 namespace InventorySales.Application.Features.Products.Commands.UpdatePrice
 {

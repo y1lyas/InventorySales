@@ -143,6 +143,9 @@ namespace InventorySales.Infrastructure.RedisCache
 
             await _db.KeyDeleteAsync(redisKeys);
             await _db.KeyDeleteAsync(tagKey);
+
+            _logger.LogDebug("Cache invalidated for tag: {Tag}", tag);
+
         }
     }
 }

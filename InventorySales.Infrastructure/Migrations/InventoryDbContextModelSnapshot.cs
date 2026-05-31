@@ -170,6 +170,10 @@ namespace InventorySales.Infrastructure.Migrations
                     b.Property<Guid>("ProductId")
                         .HasColumnType("uuid");
 
+                    b.Property<string>("ProductNameAtSale")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<byte[]>("RowVersion")
                         .HasColumnType("bytea");
 
@@ -230,8 +234,14 @@ namespace InventorySales.Infrastructure.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("integer");
 
+                    b.Property<int>("Reason")
+                        .HasColumnType("integer");
+
                     b.Property<byte[]>("RowVersion")
                         .HasColumnType("bytea");
+
+                    b.Property<Guid?>("SaleReferenceId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 

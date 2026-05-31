@@ -1,5 +1,6 @@
 ﻿using InventorySales.Application.Abstractions;
 using InventorySales.Application.Abstractions.Services;
+using InventorySales.Application.Common.Exceptions;
 using InventorySales.Application.Exceptions;
 using InventorySales.Domain.Entities.Auth;
 using Microsoft.EntityFrameworkCore;

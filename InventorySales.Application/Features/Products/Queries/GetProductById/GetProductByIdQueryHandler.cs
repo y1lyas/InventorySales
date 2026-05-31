@@ -1,14 +1,9 @@
 ﻿using AutoMapper.QueryableExtensions;
 using InventorySales.Application.Abstractions;
-using InventorySales.Application.Exceptions;
+using InventorySales.Application.Common.Exceptions;
 using InventorySales.Application.Features.Products.DTOs;
 using InventorySales.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace InventorySales.Application.Features.Products.Queries.GetProductById
 {

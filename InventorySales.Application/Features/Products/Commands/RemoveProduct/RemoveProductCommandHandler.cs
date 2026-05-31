@@ -1,12 +1,7 @@
 ﻿using InventorySales.Application.Abstractions;
 using InventorySales.Application.Abstractions.Services;
-using InventorySales.Application.Exceptions;
+using InventorySales.Application.Common.Exceptions;
 using InventorySales.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace InventorySales.Application.Features.Products.Commands.RemoveProduct
 {
@@ -14,7 +9,7 @@ namespace InventorySales.Application.Features.Products.Commands.RemoveProduct
     {
         private readonly IUnitOfWork _uow;
         private readonly IUserService _userService;
-        public RemoveProductCommandHandler(IUnitOfWork uow,IUserService userService)
+        public RemoveProductCommandHandler(IUnitOfWork uow, IUserService userService)
         {
             _uow = uow;
             _userService = userService;

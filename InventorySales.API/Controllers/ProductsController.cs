@@ -2,6 +2,7 @@
 using InventorySales.Application.Features.Products.Commands.DecreaseStock;
 using InventorySales.Application.Features.Products.Commands.IncreaseStock;
 using InventorySales.Application.Features.Products.Commands.RemoveProduct;
+using InventorySales.Application.Features.Products.Commands.UpdateName;
 using InventorySales.Application.Features.Products.Commands.UpdatePrice;
 using InventorySales.Application.Features.Products.Queries.GetAllStockMovements;
 using InventorySales.Application.Features.Products.Queries.GetLowStock;
@@ -24,7 +25,7 @@ namespace InventorySales.API.Controllers
         {
             _mediator = mediator;
         }
-        [EnableRateLimiting("read-policy")]
+        //[EnableRateLimiting("read-policy")]
         //[Authorize(Policy = "ProductRead")]
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAllProducts([FromQuery] GetAllProductsQuery query)
@@ -32,15 +33,15 @@ namespace InventorySales.API.Controllers
             var result = await _mediator.Send(query);
             return Ok(result);
         }
-        [EnableRateLimiting("read-policy")]
+        //[EnableRateLimiting("read-policy")]
         //[Authorize(Policy = "ProductRead")]
-        [HttpGet("GetById")]
-        public async Task<IActionResult> GetProductById([FromQuery] GetProductByIdQuery query)
+        [HttpGet("GetById/{id}")]
+        public async Task<IActionResult> GetProductById([FromRoute] Guid id)
         {
-            var result = await _mediator.Send(query);
+            var result = await _mediator.Send(new GetProductByIdQuery(id));
             return Ok(result);
         }
-        [EnableRateLimiting("write-policy")]
+        //[EnableRateLimiting("write-policy")]
         //[Authorize(Policy = "ProductCreate")]
         [HttpPost("create")]
         public async Task<IActionResult> CreateProduct([FromBody] CreateProductCommand request)
@@ -48,7 +49,7 @@ namespace InventorySales.API.Controllers
             var productId = await _mediator.Send(request);
             return Created(string.Empty, productId);
         }
-        [EnableRateLimiting("write-policy")]
+        //[EnableRateLimiting("write-policy")]
         //[Authorize(Policy = "ProductUpdatePrice")]
         [HttpPatch("price")]
         public async Task<IActionResult> UpdatePrice([FromBody] UpdateProductPriceCommand request)
@@ -56,7 +57,15 @@ namespace InventorySales.API.Controllers
             await _mediator.Send(request);
             return NoContent();
         }
-        [EnableRateLimiting("write-policy")]
+        [HttpPatch("name")] 
+        //[EnableRateLimiting("write-policy")]
+        //[Authorize(Policy = "ProductUpdateName")]
+        public async Task<IActionResult> UpdateName([FromBody] UpdateProductNameCommand request)
+        {
+            await _mediator.Send(request);
+            return NoContent();
+        }
+        //[EnableRateLimiting("write-policy")]
         //[Authorize(Policy = "StockIncrease")]
         [HttpPost("increase-stock")]
         public async Task<IActionResult> IncreaseStock([FromBody] IncreaseStockCommand request)
@@ -64,7 +73,7 @@ namespace InventorySales.API.Controllers
             await _mediator.Send(request);
             return Ok();
         }
-        [EnableRateLimiting("write-policy")]
+        //[EnableRateLimiting("write-policy")]
         //[Authorize(Policy = "StockDecrease")]
         [HttpPost("decrease-stock")]
         public async Task<IActionResult> DecreaseStock([FromBody] DecreaseStockCommand request)
@@ -72,7 +81,7 @@ namespace InventorySales.API.Controllers
             await _mediator.Send(request);
             return Ok();
         }
-        [EnableRateLimiting("read-policy")]
+        //[EnableRateLimiting("read-policy")]
         //[Authorize(Policy = "StockReadLow")]
         [HttpGet("low-stock")]
         public async Task<IActionResult> GetLowStock([FromQuery] GetLowStockProductsQuery query)

@@ -1,5 +1,6 @@
 ﻿using InventorySales.Application.Features.Sales.Commands.MakeSale;
 using InventorySales.Application.Features.Sales.DTOs;
+using InventorySales.Application.Features.Sales.Queries.GetSale;
 using InventorySales.Application.Features.Sales.Queries.GetSales;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.RateLimiting;
@@ -16,20 +17,27 @@ namespace InventorySales.API.Controllers
         {
             _mediator = mediator;
         }
-        [EnableRateLimiting("write-policy")]
+        //[EnableRateLimiting("write-policy")]
         //[Authorize(Policy = "SaleCreate")]
-        [HttpPost("make-sale")]
+        [HttpPost("sales")]
         public async Task<IActionResult> MakeSale([FromBody] MakeSaleCommand request)
         {
             var saleId = await _mediator.Send(request);
             return Ok(new { saleId });
         }
-        [EnableRateLimiting("read-policy")]
+        //[EnableRateLimiting("read-policy")]
         //[Authorize(Policy = "SaleReadOwn")]
         [HttpGet("sales")]
-        public async Task<IActionResult> GetUserSales()
+        public async Task<IActionResult> GetUserSales([FromQuery] GetAllSalesQuery request)
         {
-            var result = await _mediator.Send(new GetSalesQuery());
+            var result = await _mediator.Send(request);
+            return Ok(result);
+        }
+
+        [HttpGet("sales/{id}")]
+        public async Task<IActionResult> GetSale([FromRoute] Guid id)
+        {
+            var result = await _mediator.Send(new GetSaleQuery(id));
             return Ok(result);
         }
     }

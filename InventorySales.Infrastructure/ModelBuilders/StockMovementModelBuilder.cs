@@ -14,5 +14,7 @@ public class StockMovementModelBuilder : IEntityTypeConfiguration<StockMovement>
                .HasForeignKey(x => x.ProductId);
 
 
+
+
     }
 }

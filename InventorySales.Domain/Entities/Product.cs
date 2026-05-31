@@ -3,6 +3,7 @@ using InventorySales.Domain.DomainEvents.Events.Category;
 using InventorySales.Domain.DomainEvents.Events.Product;
 using InventorySales.Domain.Entities.Common;
 using InventorySales.Domain.Entities.Common.Interfaces;
+using InventorySales.Domain.Enums;
 using InventorySales.Domain.Exceptions;
 using InventorySales.Domain.ValueObjects;
 
@@ -44,24 +45,33 @@ namespace InventorySales.Domain.Entities
             AddDomainEvent(new ProductPriceUpdateEvent(Id, oldPrice, Price));
         }
 
-        public void IncreaseStock(int amount, string userId)
+        public void IncreaseStock(int amount, StockMovementContext context)
         {
             Stock = Stock.Add(amount);
 
-            _stockMovements.Add(new StockMovement(Id, MovementType.Increase, amount, userId));
+            AddMovement(MovementType.Increase, amount, context);
 
             AddDomainEvent(new StockIncreasedEvent(Id, amount));
         }
 
-        public void DecreaseStock(int amount, string userId)
+        public void DecreaseStock(int amount, StockMovementContext context)
         {
             Stock = Stock.Subtract(amount);
 
-            _stockMovements.Add(new StockMovement(Id, MovementType.Decrease, amount, userId));
-
+            AddMovement(MovementType.Decrease, amount, context);
             AddDomainEvent(new StockDecreasedEvent(Id, amount));
         }
-
+        private void AddMovement(MovementType movementType, int amount, StockMovementContext context)
+        {
+            _stockMovements.Add(
+                new StockMovement(
+                    Id,
+                    movementType,
+                    context.Reason,
+                    amount,
+                    context.UserId,
+                    context.SaleReferenceId));
+        }
         public void AssignCategory(Guid categoryId)
         {
             if (categoryId == Guid.Empty)
@@ -86,6 +96,18 @@ namespace InventorySales.Domain.Entities
             DeletedAt = DateTime.UtcNow;
             DeletedById = userId;
             AddDomainEvent(new ProductRemovedEvent(Id));
+        }
+        public void UpdateName(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new DomainException(
+                    "Product name cannot be empty.");
+            }
+
+            var oldName = Name;
+            Name = name.Trim();
+            AddDomainEvent(new ProductNameUpdateEvent(Id, oldName, Name));
         }
     }
 }

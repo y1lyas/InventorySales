@@ -1,15 +1,9 @@
 ﻿using InventorySales.Application.Abstractions;
-using InventorySales.Application.Abstractions.RedisCache;
-using InventorySales.Application.Abstractions.Services;
-using InventorySales.Application.Exceptions;
+using InventorySales.Application.Common.Exceptions;
 using InventorySales.Application.Features.Products.DTOs;
 using InventorySales.Domain.Entities;
-using InventorySales.Domain.Exceptions;
 using InventorySales.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using System.Data;
-using System.Threading;
 
 namespace InventorySales.Application.Features.Products.Commands.CreateProduct
 {
@@ -38,7 +32,7 @@ namespace InventorySales.Application.Features.Products.Commands.CreateProduct
             }
             var price = Money.Create(request.UnitPrice, "TRY");
 
-            var product = new Product(request.Sku ,request.Name,price, request.CategoryId);
+            var product = new Product(request.Sku, request.Name, price, request.CategoryId);
 
             await _uow.Repository<Product>().AddAsync(product);
 

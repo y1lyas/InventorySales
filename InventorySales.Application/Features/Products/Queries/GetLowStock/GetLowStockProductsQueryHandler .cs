@@ -3,7 +3,6 @@ using InventorySales.Application.Abstractions;
 using InventorySales.Application.Features.Products.DTOs;
 using InventorySales.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace InventorySales.Application.Features.Products.Queries.GetLowStock
 {

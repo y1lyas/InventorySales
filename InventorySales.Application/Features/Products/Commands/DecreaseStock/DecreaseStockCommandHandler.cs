@@ -1,8 +1,9 @@
 ﻿using InventorySales.Application.Abstractions;
 using InventorySales.Application.Abstractions.Services;
-using InventorySales.Application.Exceptions;
+using InventorySales.Application.Common.Exceptions;
 using InventorySales.Domain.Entities;
-using Microsoft.Extensions.Logging;
+using InventorySales.Domain.Enums;
+using InventorySales.Domain.ValueObjects;
 
 namespace InventorySales.Application.Features.Products.Commands.DecreaseStock
 {
@@ -24,7 +25,11 @@ namespace InventorySales.Application.Features.Products.Commands.DecreaseStock
 
             var user = await _userContext.GetCurrentUserAsync(ct);
 
-            product.DecreaseStock(request.Quantity, user.ExternalId);
+            var context = new StockMovementContext(
+           user.ExternalId,
+           MovementReason.Adjustment);
+
+            product.DecreaseStock(request.Quantity, context);
 
             return Unit.Value;
         }

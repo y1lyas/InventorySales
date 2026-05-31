@@ -1,11 +1,6 @@
 ﻿using InventorySales.Application.Abstractions.RedisCache;
 using InventorySales.Domain.DomainEvents.Events.Category;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace InventorySales.Application.Features.Categories.Events
 {

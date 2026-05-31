@@ -35,6 +35,7 @@ namespace InventorySales.Infrastructure
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IUserContext, UserContext>();
             services.AddScoped<ICorrelationContext, HttpCorrelationContext>();
+            services.AddScoped<IPaginationService, PaginationService>();
 
             services.AddDbContext<InventoryDbContext>((sp, options) =>
             {

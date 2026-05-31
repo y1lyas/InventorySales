@@ -1,13 +1,9 @@
-﻿using AutoMapper.QueryableExtensions;
-using InventorySales.Application.Abstractions;
+﻿using InventorySales.Application.Abstractions;
 using InventorySales.Application.Abstractions.Services;
-using InventorySales.Application.Features.Products.Commands.CreateProduct;
+using InventorySales.Application.Common.Pagination;
 using InventorySales.Application.Features.Products.DTOs;
-using InventorySales.Application.Features.Products.Paging;
 using InventorySales.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using System.Linq;
 
 namespace InventorySales.Application.Features.Products.Queries.GetProducts
 {
@@ -15,49 +11,77 @@ namespace InventorySales.Application.Features.Products.Queries.GetProducts
     {
         private readonly IUnitOfWork _uow;
         private readonly IMapper _mapper;
+        private readonly IPaginationService _paginationService;
 
-        public GetAllProductsQueryHandler(IUnitOfWork uow, IMapper mapper)
+        public GetAllProductsQueryHandler(IUnitOfWork uow, IMapper mapper, IPaginationService paginationService)
         {
             _uow = uow;
             _mapper = mapper;
+            _paginationService = paginationService;
         }
 
         public async Task<PagedResult<ProductDto>> Handle(GetAllProductsQuery request, CancellationToken ct)
         {
-            var pageNumber = Math.Max(1, request.PageNumber);
-            var pageSize = Math.Clamp(request.PageSize, 1, 200);
-
-            var queryable = _uow.Repository<Product>().Query().AsNoTracking();
+            var baseQuery = _uow.Repository<Product>().Query().AsNoTracking();
 
             if (request.IsDeleted.GetValueOrDefault())
             {
-                queryable = queryable.IgnoreQueryFilters().Where(p => p.IsDeleted)
+                baseQuery = baseQuery.IgnoreQueryFilters().Where(p => p.IsDeleted)
             .OrderByDescending(p => p.DeletedAt);
             }
             if (request.CategoryId.HasValue)
             {
-                queryable = queryable.Where(x => x.CategoryId == request.CategoryId.Value);
+                baseQuery = baseQuery.Where(x => x.CategoryId == request.CategoryId.Value);
             }
-
             if (!string.IsNullOrWhiteSpace(request.SearchTerm))
             {
                 var search = request.SearchTerm.Trim().ToLower();
-                queryable = queryable.Where(x =>
+                baseQuery = baseQuery.Where(x =>
                     x.Name.ToLower().Contains(search) ||
                     x.Sku.Value.ToLower().Contains(search));
             }
+            if (request.MinStock.HasValue)
+            {
+                baseQuery = baseQuery.Where(x =>
+                    x.Stock.Value >= request.MinStock.Value);
+            }
+            if (request.MaxStock.HasValue)
+            {
+                baseQuery = baseQuery.Where(x =>
+                    x.Stock.Value <= request.MaxStock.Value);
+            }
+            if (request.MinPrice.HasValue)
+            {
+                baseQuery = baseQuery.Where(x =>
+                    x.Price.Amount >= request.MinPrice.Value);
+            }
+            if (request.MaxPrice.HasValue)
+            {
+                baseQuery = baseQuery.Where(x =>
+                    x.Price.Amount <= request.MaxPrice.Value);
+            }
+            if (request.StartDate.HasValue)
+            {
+                baseQuery = baseQuery.Where(x =>
+                    x.CreatedDate >= request.StartDate.Value);
+            }
+            if (request.EndDate.HasValue)
+            {
+                var endDate =
+                    request.EndDate.Value.Date.AddDays(1);
 
-            var totalCount = await queryable.LongCountAsync(ct);
+                baseQuery = baseQuery.Where(x =>
+                    x.CreatedDate < endDate);
+            }
 
-            var items = await queryable
-                .ProjectTo<ProductDto>(_mapper.ConfigurationProvider)
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync(ct);
-
-            var totalPages = pageSize == 0 ? 0 : (int)Math.Ceiling((double)totalCount / pageSize);
-
-            return new PagedResult<ProductDto>(items, pageNumber, pageSize, totalCount, totalPages);
+            return await _paginationService
+          .CreateAsync<Product, ProductDto>(
+              baseQuery,
+              q => q.OrderByDescending(x => x.CreatedDate),
+              request.PageNumber,
+              request.PageSize,
+              _mapper.ConfigurationProvider,
+              ct);
         }
     }
 }

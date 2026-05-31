@@ -1,9 +1,5 @@
 ﻿using InventorySales.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using InventorySales.Domain.Enums;
 
 namespace InventorySales.Application.Features.Products.DTOs
 {
@@ -15,6 +11,8 @@ namespace InventorySales.Application.Features.Products.DTOs
         public string? ProductSku { get; set; }
         public int Quantity { get; set; }
         public MovementType MovementType { get; set; }
+        public MovementReason Reason { get; set; }
+        public Guid? SaleReferenceId { get; set; }
         public DateTime CreatedAt { get; set; }
         public string? CreatedById { get; set; }
     }

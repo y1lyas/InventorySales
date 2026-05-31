@@ -11,14 +11,16 @@ namespace InventorySales.Domain.Entities
     public class SaleItem : BaseEntity
     {
         public Guid ProductId { get; private set; }
+        public string ProductNameAtSale { get; private set; }
         public Quantity Quantity { get; private set; }
         public Money UnitPriceAtSale { get; private set; } 
         public Money LineTotal => Money.Create(Quantity.Value * UnitPriceAtSale.Amount, UnitPriceAtSale.Currency);
         private SaleItem() { } 
 
-        public SaleItem(Guid productId, int quantity, Money unitPrice)
+        public SaleItem(Guid productId, string productName, int quantity, Money unitPrice)
         {
             ProductId = productId;
+            ProductNameAtSale = productName;
             Quantity = Quantity.From(quantity);
             UnitPriceAtSale = unitPrice;
         }
