@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace InventorySales.Application.Features.Products.Queries.GetAllStockMovements
 {
-    public class GetAllStockMovementsValidator : AbstractValidator<GetAllStockMovementsQuery>
+    public class GetAllStockMovementsQueryValidator : AbstractValidator<GetAllStockMovementsQuery>
     {
-        public GetAllStockMovementsValidator() 
+        public GetAllStockMovementsQueryValidator()
         {
             RuleFor(x => x.MinQuantity)
-        .GreaterThanOrEqualTo(0)
-        .When(x => x.MinQuantity.HasValue);
+                .GreaterThanOrEqualTo(0)
+                .When(x => x.MinQuantity.HasValue);
 
             RuleFor(x => x.MaxQuantity)
                 .GreaterThanOrEqualTo(0)
@@ -24,6 +24,13 @@ namespace InventorySales.Application.Features.Products.Queries.GetAllStockMoveme
                     !x.MaxQuantity.HasValue ||
                     x.MinQuantity <= x.MaxQuantity)
                 .WithMessage("MinQuantity cannot be greater than MaxQuantity.");
+
+            RuleFor(x => x)
+                .Must(x =>
+                    !x.StartDate.HasValue ||
+                    !x.EndDate.HasValue ||
+                    x.StartDate <= x.EndDate)
+                .WithMessage("StartDate cannot be later than EndDate.");
         }
     }
 }

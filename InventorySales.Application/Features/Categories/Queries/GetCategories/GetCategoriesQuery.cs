@@ -4,5 +4,5 @@ using InventorySales.Application.Features.Categories.DTOs;
 namespace InventorySales.Application.Features.Categories.Queries.GetCategoryById
 {
     [Cacheable(60, "Categories")]
-    public record GetCategoryByIdQuery(Guid CategoryId) : IRequest<CategoryDto>, IQuery;
+    public record GetCategoriesQuery(Guid CategoryId) : IRequest<CategoryDto>, IQuery;
 }

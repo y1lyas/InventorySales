@@ -11,18 +11,18 @@ using System.Threading.Tasks;
 
 namespace InventorySales.Application.Features.Sales.Queries.GetSale
 {
-    public class GetSaleQueryHandler : IRequestHandler<GetSaleQuery, SaleDetailDto>
+    public class GetSalesQueryHandler : IRequestHandler<GetSalesQuery, SaleDetailDto>
     {
         private readonly IUnitOfWork _uow;
         private readonly IMapper _mapper;
 
-        public GetSaleQueryHandler(IUnitOfWork uow, IMapper mapper)
+        public GetSalesQueryHandler(IUnitOfWork uow, IMapper mapper)
         {
             _uow = uow;
             _mapper = mapper;
         }
 
-        public async Task<SaleDetailDto> Handle(GetSaleQuery request, CancellationToken ct)
+        public async Task<SaleDetailDto> Handle(GetSalesQuery request, CancellationToken ct)
         {
             var sale = await _uow.Repository<Sale>()
           .Query()

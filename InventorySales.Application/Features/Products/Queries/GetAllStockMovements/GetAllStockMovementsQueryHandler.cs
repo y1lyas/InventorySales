@@ -25,53 +25,8 @@ namespace InventorySales.Application.Features.Products.Queries.GetAllStockMoveme
             var baseQuery = _uow.Repository<StockMovement>()
                  .Query()
                  .AsNoTracking()
-                .Where(x => x.Product != null);
-
-            if (request.ProductId.HasValue)
-            {
-                baseQuery = baseQuery.Where(x => x.ProductId == request.ProductId.Value);
-            }
-
-            if (request.MovementType.HasValue)
-            {
-                baseQuery = baseQuery.Where(x =>
-                    x.MovementType == request.MovementType.Value);
-            }
-            if (request.MovementReason.HasValue)
-            {
-                baseQuery = baseQuery.Where(x =>
-                    x.Reason == request.MovementReason.Value);
-            }
-            if (request.StartDate.HasValue)
-            {
-                baseQuery = baseQuery.Where(x =>
-                    x.CreatedDate >= request.StartDate.Value);
-            }
-            if (request.EndDate.HasValue)
-            {
-                var endDate = request.EndDate.Value.Date.AddDays(1);
-
-                baseQuery = baseQuery.Where(x =>
-                    x.CreatedDate < endDate);
-            }
-            if (request.MinQuantity.HasValue)
-            {
-                baseQuery = baseQuery.Where(x =>
-                    x.Quantity >= request.MinQuantity.Value);
-            }
-            if (request.MaxQuantity.HasValue)
-            {
-                baseQuery = baseQuery.Where(x =>
-                    x.Quantity <= request.MaxQuantity.Value);
-            }
-            if (!string.IsNullOrWhiteSpace(request.SearchTerm))
-            {
-                var search = request.SearchTerm.Trim().ToLower();
-
-                baseQuery = baseQuery.Where(x =>
-                    x.Product.Name.ToLower().Contains(search) ||
-                    x.Product.Sku.Value.ToLower().Contains(search));
-            }
+                 .Where(x => x.Product != null)
+                 .ApplyFilters(request);
 
             return await _paginationService
            .CreateAsync<StockMovement, StockMovementDto>(

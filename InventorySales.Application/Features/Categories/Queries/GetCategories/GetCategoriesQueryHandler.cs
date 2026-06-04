@@ -7,16 +7,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace InventorySales.Application.Features.Categories.Queries.GetCategoryById
 {
-    public class GetCategoryByIdQueryHandler : IRequestHandler<GetCategoryByIdQuery, CategoryDto>
+    public class GetCategoriesQueryHandler : IRequestHandler<GetCategoriesQuery, CategoryDto>
     {
         private readonly IUnitOfWork _uow;
         private readonly IMapper _mapper;
-        public GetCategoryByIdQueryHandler(IUnitOfWork uow, IMapper mapper)
+        public GetCategoriesQueryHandler(IUnitOfWork uow, IMapper mapper)
         {
             _uow = uow;
             _mapper = mapper;
         }
-        public async Task<CategoryDto> Handle(GetCategoryByIdQuery request, CancellationToken ct)
+        public async Task<CategoryDto> Handle(GetCategoriesQuery request, CancellationToken ct)
         {
             var categoryDto = await _uow.Repository<Category>()
          .Query()

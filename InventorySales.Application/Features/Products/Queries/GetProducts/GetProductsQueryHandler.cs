@@ -7,16 +7,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace InventorySales.Application.Features.Products.Queries.GetProductById
 {
-    public class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQuery, ProductDto>
+    public class GetProductsQueryHandler : IRequestHandler<GetProductsQuery, ProductDto>
     {
         private readonly IUnitOfWork _uow;
         private readonly IMapper _mapper;
-        public GetProductByIdQueryHandler(IUnitOfWork uow, IMapper mapper)
+        public GetProductsQueryHandler(IUnitOfWork uow, IMapper mapper)
         {
             _uow = uow;
             _mapper = mapper;
         }
-        public async Task<ProductDto> Handle(GetProductByIdQuery request, CancellationToken ct)
+        public async Task<ProductDto> Handle(GetProductsQuery request, CancellationToken ct)
         {
             var productDto = await _uow.Repository<Product>()
          .Query()

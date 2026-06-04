@@ -28,16 +28,16 @@ namespace InventorySales.API.Controllers
         //[EnableRateLimiting("read-policy")]
         //[Authorize(Policy = "SaleReadOwn")]
         [HttpGet("sales")]
-        public async Task<IActionResult> GetUserSales([FromQuery] GetAllSalesQuery request)
+        public async Task<IActionResult> GetAllSales([FromQuery] GetAllSalesQuery request)
         {
             var result = await _mediator.Send(request);
             return Ok(result);
         }
 
         [HttpGet("sales/{id}")]
-        public async Task<IActionResult> GetSale([FromRoute] Guid id)
+        public async Task<IActionResult> GetSales([FromRoute] Guid id)
         {
-            var result = await _mediator.Send(new GetSaleQuery(id));
+            var result = await _mediator.Send(new GetSalesQuery(id));
             return Ok(result);
         }
     }

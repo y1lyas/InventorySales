@@ -36,9 +36,9 @@ namespace InventorySales.API.Controllers
         //[EnableRateLimiting("read-policy")]
         //[Authorize(Policy = "ProductRead")]
         [HttpGet("GetById/{id}")]
-        public async Task<IActionResult> GetProductById([FromRoute] Guid id)
+        public async Task<IActionResult> GetProducts([FromRoute] Guid id)
         {
-            var result = await _mediator.Send(new GetProductByIdQuery(id));
+            var result = await _mediator.Send(new GetProductsQuery(id));
             return Ok(result);
         }
         //[EnableRateLimiting("write-policy")]

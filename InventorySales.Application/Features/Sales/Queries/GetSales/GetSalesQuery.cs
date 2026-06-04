@@ -10,6 +10,6 @@ using System.Threading.Tasks;
 namespace InventorySales.Application.Features.Sales.Queries.GetSale
 {
     [Cacheable(60, "Sales")]
-    public sealed record GetSaleQuery(Guid SaleId) : IRequest<SaleDetailDto>, IQuery;
+    public sealed record GetSalesQuery(Guid SaleId) : IRequest<SaleDetailDto>, IQuery;
 
 }

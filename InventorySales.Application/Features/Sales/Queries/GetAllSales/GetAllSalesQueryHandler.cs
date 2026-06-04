@@ -3,6 +3,7 @@ using InventorySales.Application.Abstractions.Services;
 using InventorySales.Application.Common.Pagination;
 using InventorySales.Application.Features.Products.DTOs;
 using InventorySales.Application.Features.Sales.DTOs;
+using InventorySales.Application.Features.Sales.Queries.GetAllSales;
 using InventorySales.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -28,34 +29,12 @@ namespace InventorySales.Application.Features.Sales.Queries.GetSales
 
             var baseQuery = _uow.Repository<Sale>().Query()
                 .Where(u => u.CreatedById == userId)
-                .AsNoTracking();
+                .AsNoTracking()
+                .ApplyFilters(request);
 
-            if (request.StartDate.HasValue)
-            {
-                baseQuery = baseQuery.Where(x =>
-                    x.CreatedDate >= request.StartDate.Value);
-            }
-
-            if (request.EndDate.HasValue)
-            {
-                baseQuery = baseQuery.Where(x =>
-                    x.CreatedDate <= request.EndDate.Value);
-            }
-
-            if (request.MinAmount.HasValue)
-            {
-                baseQuery = baseQuery.Where(x =>
-                    x.TotalPrice.Amount >= request.MinAmount.Value);
-            }
-
-            if (request.MaxAmount.HasValue)
-            {
-                baseQuery = baseQuery.Where(x =>
-                    x.TotalPrice.Amount <= request.MaxAmount.Value);
-            }
 
             return await _paginationService
-         .CreateAsync<Sale, SaleDto>(
+             .CreateAsync<Sale, SaleDto>(
              baseQuery,
              q => q.OrderByDescending(x => x.CreatedDate),
              request.PageNumber,
