@@ -1,4 +1,5 @@
-﻿using InventorySales.Application.Features.Sales.DTOs;
+﻿using InventorySales.Application.Features.Dashboard.DTOs;
+using InventorySales.Application.Features.Sales.DTOs;
 using InventorySales.Domain.Entities;
 
 namespace InventorySales.Application.Features.Sales.Maps
@@ -17,6 +18,10 @@ namespace InventorySales.Application.Features.Sales.Maps
                 .ForMember(d => d.TotalPrice, o => o.MapFrom(s => s.TotalPrice.Amount))
                 .ForMember(d => d.SaleDate, o => o.MapFrom(s => s.CreatedDate))
                 .ForMember(d => d.Items, o => o.MapFrom(s => s.Items));
+
+            CreateMap<Sale, RecentSaleDto>()
+                .ForMember(d => d.TotalPrice, o => o.MapFrom(s => s.TotalPrice.Amount))
+                .ForMember(d => d.SaleDate, o => o.MapFrom(s => s.CreatedDate));
         }
     }
 }
