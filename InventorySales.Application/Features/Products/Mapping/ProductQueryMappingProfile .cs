@@ -1,4 +1,5 @@
-﻿using InventorySales.Application.Features.Products.DTOs;
+﻿using InventorySales.Application.Features.Dashboard.DTOs;
+using InventorySales.Application.Features.Products.DTOs;
 using InventorySales.Domain.Entities;
 
 namespace InventorySales.Application.Features.Products.Maps
@@ -17,6 +18,16 @@ namespace InventorySales.Application.Features.Products.Maps
                 .ForMember(d => d.Currency, o => o.MapFrom(s => s.Price.Currency))
                 .ForMember(d => d.CreatedAt, o => o.MapFrom(s => s.CreatedDate))
                 .ForMember(d => d.DeletedAt, o => o.MapFrom(s => s.DeletedAt));
+
+            CreateMap<Product, LowStockProductDto>()
+    .ForMember(d => d.ProductId,
+        o => o.MapFrom(s => s.Id))
+    .ForMember(d => d.ProductName,
+        o => o.MapFrom(s => s.Name))
+    .ForMember(d => d.Sku,
+        o => o.MapFrom(s => s.Sku.Value))
+    .ForMember(d => d.Stock,
+        o => o.MapFrom(s => s.Stock.Value));
         }
     }
 }

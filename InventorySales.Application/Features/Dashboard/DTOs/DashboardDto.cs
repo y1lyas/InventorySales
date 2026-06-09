@@ -13,10 +13,12 @@ namespace InventorySales.Application.Features.Dashboard.DTOs
         public int TotalCategories { get; set; }
 
         public int LowStockProducts { get; set; }
-
+        public List<LowStockProductDto> LowStockProductsList { get; set; } = [];
         public decimal TodaySalesAmount { get; set; }
 
         public int TodaySalesCount { get; set; }
+        public int OutOfStockProducts { get; set; }
+        public int TotalStockQuantity { get; set; }
 
         public List<RecentSaleDto> RecentSales { get; set; } = [];
 

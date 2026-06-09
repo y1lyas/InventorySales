@@ -25,6 +25,7 @@ namespace InventorySales.Application.Features.Sales.Events
 
             await _cacheService.RemoveByTagAsync("Sales");
 
+
             _logger.LogInformation("Sale created: SaleId: {SaleId}",
                 notification.SaleId);
 

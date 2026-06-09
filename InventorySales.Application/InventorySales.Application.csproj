@@ -21,8 +21,4 @@
     <ProjectReference Include="..\InventorySales.Domain\InventorySales.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Features\Dashboard\Mapping\" />
-  </ItemGroup>
-
 </Project>

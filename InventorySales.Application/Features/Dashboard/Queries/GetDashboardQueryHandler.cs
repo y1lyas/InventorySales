@@ -29,31 +29,61 @@ namespace InventorySales.Application.Features.Dashboard.Queries
             var totalProducts =
     await _uow.Repository<Product>()
         .Query()
+         .AsNoTracking()
         .CountAsync(ct);
+
+            var totalStockQuantity =
+    await _uow.Repository<Product>()
+        .Query()
+        .AsNoTracking()
+        .SumAsync(x => x.Stock.Value, ct);
 
             var totalCategories =
     await _uow.Repository<Category>()
         .Query()
+        .AsNoTracking()
         .CountAsync(ct);
 
             var lowStockProducts =
     await _uow.Repository<Product>()
         .Query()
+        .AsNoTracking()
         .CountAsync(x => x.Stock.Value <= 10, ct);
+
+            const int lowStockThreshold = 10;
+
+            var lowStockProductsList =
+                await _uow.Repository<Product>()
+                    .Query()
+                    .AsNoTracking()
+                    .Where(x => x.Stock.Value <= lowStockThreshold)
+                    .OrderBy(x => x.Stock.Value)
+                    .Take(5)
+                    .ProjectTo<LowStockProductDto>(
+                        _mapper.ConfigurationProvider)
+                    .ToListAsync(ct);
+
+            var outOfStockProducts =
+    await _uow.Repository<Product>()
+        .Query()
+        .AsNoTracking()
+        .CountAsync(x => x.Stock.Value == 0, ct);
 
             var today = DateTime.UtcNow.Date;
 
-            var todaySales = await _uow.Repository<Sale>()
-        .Query()
-        .Where(x => x.CreatedDate >= today)
-        .ToListAsync(ct);
+            var todaySalesQuery = _uow.Repository<Sale>()
+             .Query()
+             .AsNoTracking()
+             .Where(x => x.CreatedDate >= today);
 
-            var todaySalesAmount = todaySales.Sum(x => x.TotalPrice.Amount);
-            var todaySalesCount = todaySales.Count;
+            var todaySalesCount = await todaySalesQuery.CountAsync(ct);
+            var todaySalesAmount = await todaySalesQuery
+                .SumAsync(x => x.TotalPrice.Amount, ct);
 
             var recentSales =
     await _uow.Repository<Sale>()
         .Query()
+        .AsNoTracking()
         .OrderByDescending(x => x.CreatedDate)
         .Take(5)
         .ProjectTo<RecentSaleDto>(_mapper.ConfigurationProvider)
@@ -62,6 +92,7 @@ namespace InventorySales.Application.Features.Dashboard.Queries
             var recentMovements =
     await _uow.Repository<StockMovement>()
         .Query()
+        .AsNoTracking()
         .OrderByDescending(x => x.CreatedDate)
         .Take(5)
         .ProjectTo<RecentStockMovementDto>(
@@ -72,8 +103,12 @@ namespace InventorySales.Application.Features.Dashboard.Queries
             {
                 TotalProducts = totalProducts,
                 TotalCategories = totalCategories,
+                TotalStockQuantity = totalStockQuantity,
                 LowStockProducts = lowStockProducts,
+                OutOfStockProducts = outOfStockProducts,
                 TodaySalesAmount = todaySalesAmount,
+                TodaySalesCount = todaySalesCount,
+                LowStockProductsList = lowStockProductsList,
                 RecentSales = recentSales,
                 RecentMovements = recentMovements
             };
