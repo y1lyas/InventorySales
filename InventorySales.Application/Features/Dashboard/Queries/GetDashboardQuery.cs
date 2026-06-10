@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 
 namespace InventorySales.Application.Features.Dashboard.Queries
 {
-    [Cacheable(60, "Dashboard")]
     public record GetDashboardQuery()
      : IRequest<DashboardDto>, IQuery;
 }
